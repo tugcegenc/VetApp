@@ -1,0 +1,57 @@
+body {
+  background-color: #f8f9fa;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.app {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #ffffff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.container {
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.carousel img {
+  height: 400px;
+  object-fit: cover;
+}
+.navbar-light {
+  background-color: #F5F5F5; /* Bej arka plan */
+}
+
+.nav-link {
+  color: #2196F3; /* Mavi link renkleri */
+}
+
+.nav-link:hover {
+  color: #4CAF50; /* Yeşil hover renkleri */
+}
+/* App.css */
+.bg-custom {
+  background-color: #E8EAF6!important;
+}
+ .footer {
+  background-color: #F5F5F5; /* Bej arka plan */
+  color: #333; /* Metin rengi */
+  border-top: 1px solid #E7E7E7; /* Üst kenar çizgisi */
+}
+
+.footer a {
+  color: #2196F3; /* Link renkleri */
+}
+
+.footer a:hover {
+  color: #4CAF50; /* Hover renkleri */
+}
