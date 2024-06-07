@@ -3,7 +3,6 @@ import axios from 'axios';
 import { Table, Button, Modal, Form } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import '../App.css'; 
 
 const Doctor = () => {
   const [doctors, setDoctors] = useState([]);
@@ -17,8 +16,6 @@ const Doctor = () => {
   const doctorModalRef = useRef(null);
   const workDayModalRef = useRef(null);
 
-  const backendUrl = 'https://vet-app-jb21.onrender.com';
-
   useEffect(() => {
     fetchDoctors();
   }, []);
@@ -26,10 +23,10 @@ const Doctor = () => {
   const fetchDoctors = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${backendUrl}/api/v1/doctors`);
+      const response = await axios.get('http://localhost:8080/api/v1/doctors');
       const doctorsData = response.data.content;
       setDoctors(Array.isArray(doctorsData) ? doctorsData : []);
-      fetchWorkDays(); 
+      fetchWorkDays(); // fetchWorkDays fonksiyonunu burada çağırıyoruz ve doctorsData'yı parametre olarak geçiyoruz
     } catch (error) {
       toast.error('There was an error fetching the doctors.');
     } finally {
@@ -40,7 +37,7 @@ const Doctor = () => {
   const fetchWorkDays = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${backendUrl}/api/v1/available-dates`);
+      const response = await axios.get('http://localhost:8080/api/v1/available-dates');
       const workDaysData = response.data.content.map(workDay => ({
         ...workDay,
         workDate: workDay.workDay ? new Date(workDay.workDay).toISOString().split('T')[0] : '',
@@ -71,7 +68,7 @@ const Doctor = () => {
       handleUpdateDoctor();
     } else {
       try {
-        const response = await axios.post(`${backendUrl}/api/v1/doctors`, newDoctor);
+        const response = await axios.post('http://localhost:8080/api/v1/doctors', newDoctor);
         setDoctors([...doctors, response.data]);
         toast.success('Doctor added successfully!');
         handleCloseDoctorModal();
@@ -89,7 +86,7 @@ const Doctor = () => {
 
   const handleUpdateDoctor = async () => {
     try {
-      const response = await axios.put(`${backendUrl}/api/v1/doctors/${newDoctor.id}`, newDoctor);
+      const response = await axios.put(`http://localhost:8080/api/v1/doctors/${newDoctor.id}`, newDoctor);
       const updatedList = doctors.map(doc => doc.id === newDoctor.id ? response.data : doc);
       setDoctors(updatedList);
       toast.success('Doctor updated successfully!');
@@ -102,7 +99,7 @@ const Doctor = () => {
 
   const handleDeleteDoctor = async (doctorId) => {
     try {
-      await axios.delete(`${backendUrl}/api/v1/doctors/${doctorId}`);
+      await axios.delete(`http://localhost:8080/api/v1/doctors/${doctorId}`);
       const newList = doctors.filter(doctor => doctor.id !== doctorId);
       setDoctors(newList);
       toast.success('Doctor deleted successfully!');
@@ -117,7 +114,7 @@ const Doctor = () => {
       handleUpdateWorkDay();
     } else {
       try {
-        const response = await axios.post(`${backendUrl}/api/v1/available-dates`, newWorkDay);
+        const response = await axios.post('http://localhost:8080/api/v1/available-dates', newWorkDay);
         setWorkDays([...workDays, response.data]);
         toast.success('Work day added successfully!');
         handleCloseWorkDayModal();
@@ -135,7 +132,7 @@ const Doctor = () => {
 
   const handleUpdateWorkDay = async () => {
     try {
-      const response = await axios.put(`${backendUrl}/api/v1/available-dates/${newWorkDay.id}`, newWorkDay);
+      const response = await axios.put(`http://localhost:8080/api/v1/available-dates/${newWorkDay.id}`, newWorkDay);
       const updatedList = workDays.map(wd => wd.id === newWorkDay.id ? response.data : wd);
       setWorkDays(updatedList);
       toast.success('Work day updated successfully!');
@@ -148,7 +145,7 @@ const Doctor = () => {
 
   const handleDeleteWorkDay = async (workDayId) => {
     try {
-      await axios.delete(`${backendUrl}/api/v1/available-dates/${workDayId}`);
+      await axios.delete(`http://localhost:8080/api/v1/available-dates/${workDayId}`);
       const newList = workDays.filter(workDay => workDay.id !== workDayId);
       setWorkDays(newList);
       toast.success('Work day deleted successfully!');
@@ -171,7 +168,7 @@ const Doctor = () => {
   return (
     <div>
       <h1 className="mb-4">Doctors</h1>
-      <Button variant="custom-button " onClick={handleShowDoctorModal}>Add Doctor</Button>
+      <Button variant="primary" onClick={handleShowDoctorModal}>Add Doctor</Button>
       {loading ? (
         <p>Loading...</p>
       ) : (
@@ -198,7 +195,7 @@ const Doctor = () => {
                   <td>{doctor.address}</td>
                   <td>{doctor.email}</td>
                   <td>
-                    <Button variant="info" onClick={() => handleEditDoctor(doctor)}>Update</Button>
+                    <Button variant="info" onClick={() => handleEditDoctor(doctor)}>Edit</Button>
                     {' '}
                     <Button variant="danger" onClick={() => handleDeleteDoctor(doctor.id)}>Delete</Button>
                   </td>
@@ -225,7 +222,7 @@ const Doctor = () => {
                   <td>{workDay.doctorName}</td>
                   <td>{workDay.workDate}</td>
                   <td>
-                    <Button variant="info" onClick={() => handleEditWorkDay(workDay)}>Update</Button>
+                    <Button variant="info" onClick={() => handleEditWorkDay(workDay)}>Edit</Button>
                     {' '}
                     <Button variant="danger" onClick={() => handleDeleteWorkDay(workDay.id)}>Delete</Button>
                   </td>

@@ -3,15 +3,12 @@ import axios from 'axios';
 import { Table, Button, Modal, Form } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import '../App.css'; 
 
 const Customer = () => {
   const [customers, setCustomers] = useState([]);
   const [show, setShow] = useState(false);
   const [newCustomer, setNewCustomer] = useState({ id: null, name: '', phone: '', city: '', address: '', email: '' });
   const [loading, setLoading] = useState(false);
-
-  const backendUrl = 'https://vet-app-jb21.onrender.com';
 
   useEffect(() => {
     fetchCustomers();
@@ -20,7 +17,7 @@ const Customer = () => {
   const fetchCustomers = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${backendUrl}/api/v1/customers`);
+      const response = await axios.get('http://localhost:8080/api/v1/customers');
       console.log('API Response:', response.data); 
       const customersData = response.data.content; 
       setCustomers(Array.isArray(customersData) ? customersData : []);
@@ -43,7 +40,7 @@ const Customer = () => {
       handleUpdate();
     } else {
       try {
-        const response = await axios.post(`${backendUrl}/api/v1/customers`, newCustomer);
+        const response = await axios.post('http://localhost:8080/api/v1/customers', newCustomer);
         setCustomers([...customers, response.data]);
         toast.success('Customer added successfully!');
         handleClose();
@@ -61,7 +58,7 @@ const Customer = () => {
 
   const handleUpdate = async () => {
     try {
-      const response = await axios.put(`${backendUrl}/api/v1/customers/${newCustomer.id}`, newCustomer);
+      const response = await axios.put(`http://localhost:8080/api/v1/customers/${newCustomer.id}`, newCustomer);
       const updatedList = customers.map(cust => cust.id === newCustomer.id ? response.data : cust);
       setCustomers(updatedList);
       toast.success('Customer updated successfully!');
@@ -74,7 +71,7 @@ const Customer = () => {
 
   const handleDelete = async (customerId) => {
     try {
-      await axios.delete(`${backendUrl}/api/v1/customers/${customerId}`);
+      await axios.delete(`http://localhost:8080/api/v1/customers/${customerId}`);
       const newList = customers.filter(customer => customer.id !== customerId);
       setCustomers(newList);
       toast.success('Customer deleted successfully!');
@@ -118,7 +115,7 @@ const Customer = () => {
                 <td>{customer.address}</td>
                 <td>{customer.email}</td>
                 <td>
-                  <Button variant="info" onClick={() => handleEdit(customer)}>Update</Button>
+                  <Button variant="info" onClick={() => handleEdit(customer)}>Edit</Button>
                   {' '}
                   <Button variant="danger" onClick={() => handleDelete(customer.id)}>Delete</Button>
                 </td>

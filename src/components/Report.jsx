@@ -3,7 +3,6 @@ import axios from 'axios';
 import { Table, Button, Modal, Form } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import '../App.css'; 
 
 const Report = () => {
   const [reports, setReports] = useState([]);
@@ -11,8 +10,6 @@ const Report = () => {
   const [show, setShow] = useState(false);
   const [newReport, setNewReport] = useState({ id: null, title: '', diagnosis: '', price: '', appointmentId: '' });
   const [loading, setLoading] = useState(false);
-
-  const backendUrl = 'https://vet-app-jb21.onrender.com';
 
   useEffect(() => {
     fetchReports();
@@ -22,7 +19,7 @@ const Report = () => {
   const fetchReports = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${backendUrl}/api/v1/reports`);
+      const response = await axios.get('http://localhost:8080/api/v1/reports');
       console.log('Reports API Response:', response.data);
       const reportsData = response.data.content;
       setReports(Array.isArray(reportsData) ? reportsData : []);
@@ -36,7 +33,7 @@ const Report = () => {
 
   const fetchAppointments = async () => {
     try {
-      const response = await axios.get(`${backendUrl}/api/v1/appointments`);
+      const response = await axios.get('http://localhost:8080/api/v1/appointments');
       console.log('Appointments API Response:', response.data);
       const appointmentsData = response.data.content;
       setAppointments(Array.isArray(appointmentsData) ? appointmentsData : []);
@@ -62,7 +59,7 @@ const Report = () => {
     } else {
       try {
         console.log('Saving report:', newReport);
-        const response = await axios.post(`${backendUrl}/api/v1/reports`, newReport);
+        const response = await axios.post('http://localhost:8080/api/v1/reports', newReport);
         setReports([...reports, response.data]);
         toast.success('Report added successfully!');
         handleClose();
@@ -80,7 +77,7 @@ const Report = () => {
 
   const handleUpdate = async () => {
     try {
-      const response = await axios.put(`${backendUrl}/api/v1/reports/${newReport.id}`, newReport);
+      const response = await axios.put(`http://localhost:8080/api/v1/reports/${newReport.id}`, newReport);
       const updatedList = reports.map(rep => rep.id === newReport.id ? response.data : rep);
       setReports(updatedList);
       toast.success('Report updated successfully!');
@@ -93,7 +90,7 @@ const Report = () => {
 
   const handleDelete = async (reportId) => {
     try {
-      await axios.delete(`${backendUrl}/api/v1/reports/${reportId}`);
+      await axios.delete(`http://localhost:8080/api/v1/reports/${reportId}`);
       const newList = reports.filter(report => report.id !== reportId);
       setReports(newList);
       toast.success('Report deleted successfully!');
@@ -145,7 +142,7 @@ const Report = () => {
                   <td>{appointment ? appointment.animalName : 'N/A'}</td>
                   <td>{appointment ? appointment.customerName : 'N/A'}</td>
                   <td>
-                    <Button variant="info" onClick={() => handleEdit(report)}>Update</Button>
+                    <Button variant="info" onClick={() => handleEdit(report)}>Edit</Button>
                     {' '}
                     <Button variant="danger" onClick={() => handleDelete(report.id)}>Delete</Button>
                   </td>

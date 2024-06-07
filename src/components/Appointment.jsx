@@ -3,7 +3,6 @@ import axios from 'axios';
 import { Table, Button, Modal, Form } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import '../App.css'; 
 
 const Appointment = () => {
   const [appointments, setAppointments] = useState([]);
@@ -14,8 +13,6 @@ const Appointment = () => {
   const [workDays, setWorkDays] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const backendUrl = 'https://vet-app-jb21.onrender.com';
-
   useEffect(() => {
     fetchAppointments();
     fetchAnimals();
@@ -25,7 +22,7 @@ const Appointment = () => {
   const fetchAppointments = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${backendUrl}/api/v1/appointments`);
+      const response = await axios.get('http://localhost:8080/api/v1/appointments');
       const appointmentsData = response.data.content.map(appointment => {
         const localDate = new Date(appointment.appointmentDate).toLocaleDateString();
         const localTime = new Date(appointment.appointmentDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -48,7 +45,7 @@ const Appointment = () => {
 
   const fetchAnimals = async () => {
     try {
-      const response = await axios.get(`${backendUrl}/api/v1/animals`);
+      const response = await axios.get('http://localhost:8080/api/v1/animals');
       const animalsData = response.data.content;
       setAnimals(Array.isArray(animalsData) ? animalsData : []);
     } catch (error) {
@@ -58,7 +55,7 @@ const Appointment = () => {
 
   const fetchDoctors = async () => {
     try {
-      const response = await axios.get(`${backendUrl}/api/v1/doctors`);
+      const response = await axios.get('http://localhost:8080/api/v1/doctors');
       const doctorsData = response.data.content;
       setDoctors(Array.isArray(doctorsData) ? doctorsData : []);
     } catch (error) {
@@ -68,7 +65,7 @@ const Appointment = () => {
 
   const fetchWorkDays = async (doctorId) => {
     try {
-      const response = await axios.get(`${backendUrl}/api/v1/available-dates?doctorId=${doctorId}`);
+      const response = await axios.get(`http://localhost:8080/api/v1/available-dates?doctorId=${doctorId}`);
       const workDaysData = response.data.content.map(workDay => ({
         ...workDay,
         workDate: workDay.workDay ? new Date(workDay.workDay).toISOString().split('T')[0] : ''
@@ -106,7 +103,7 @@ const Appointment = () => {
           animal: animal
         };
         console.log('Saving appointment:', formattedAppointment); 
-        const response = await axios.post(`${backendUrl}/api/v1/appointments`, formattedAppointment);
+        const response = await axios.post('http://localhost:8080/api/v1/appointments', formattedAppointment);
         console.log('API Response:', response.data); 
         setAppointments([...appointments, response.data]);
         toast.success('Appointment added successfully!');
@@ -142,7 +139,7 @@ const Appointment = () => {
         doctor: doctor,
         animal: animal
       };
-      const response = await axios.put(`${backendUrl}/api/v1/appointments/${newAppointment.id}`, formattedAppointment);
+      const response = await axios.put(`http://localhost:8080/api/v1/appointments/${newAppointment.id}`, formattedAppointment);
       const updatedList = appointments.map(app => app.id === newAppointment.id ? response.data : app);
       setAppointments(updatedList);
       toast.success('Appointment updated successfully!');
@@ -155,7 +152,7 @@ const Appointment = () => {
 
   const handleDelete = async (appointmentId) => {
     try {
-      await axios.delete(`${backendUrl}/api/v1/appointments/${appointmentId}`);
+      await axios.delete(`http://localhost:8080/api/v1/appointments/${appointmentId}`);
       const newList = appointments.filter(appointment => appointment.id !== appointmentId);
       setAppointments(newList);
       toast.success('Appointment deleted successfully!');
@@ -177,7 +174,7 @@ const Appointment = () => {
   return (
     <div>
       <h1 className="mb-4">Appointments</h1>
-      <Button className="custom-button-primary" onClick={handleShow}>Add Appointment</Button>
+      <Button variant="primary" onClick={handleShow}>Add Appointment</Button>
       {loading ? (
         <p>Loading...</p>
       ) : (
@@ -203,7 +200,7 @@ const Appointment = () => {
                 <td>{appointment.customerName}</td>
                 <td>{appointment.doctorName}</td>
                 <td>
-                  <Button variant="info" onClick={() => handleEdit(appointment)}>Update</Button>
+                  <Button variant="info" onClick={() => handleEdit(appointment)}>Edit</Button>
                   {' '}
                   <Button variant="danger" onClick={() => handleDelete(appointment.id)}>Delete</Button>
                 </td>

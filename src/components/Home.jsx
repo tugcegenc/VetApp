@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button } from 'react-bootstrap';
 import '../App.css'; 
+import Customer from './Customer';
 
 const Home = () => {
   return (
@@ -9,6 +10,7 @@ const Home = () => {
       <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
         <Button variant="primary" href="/login" style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Login</Button>
       </div>
+      <Customer/>
     </div>
   );
 };

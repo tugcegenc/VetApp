@@ -3,7 +3,6 @@ import axios from 'axios';
 import { Table, Button, Modal, Form } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import '../App.css'; 
 
 const Vaccine = () => {
   const [vaccines, setVaccines] = useState([]);
@@ -22,8 +21,6 @@ const Vaccine = () => {
   });
   const [loading, setLoading] = useState(false);
 
-  const backendUrl = 'https://vet-app-jb21.onrender.com';
-
   useEffect(() => {
     fetchVaccines();
     fetchAnimals();
@@ -32,7 +29,7 @@ const Vaccine = () => {
   const fetchVaccines = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${backendUrl}/api/v1/vaccinations`);
+      const response = await axios.get('http://localhost:8080/api/v1/vaccinations');
       const vaccinesData = response.data.content.map(vaccine => ({
         ...vaccine,
         protectionStartDate: vaccine.protectionStartDate ? new Date(vaccine.protectionStartDate).toISOString().split('T')[0] : '',
@@ -49,7 +46,7 @@ const Vaccine = () => {
 
   const fetchAnimals = async () => {
     try {
-      const response = await axios.get(`${backendUrl}/api/v1/animals`);
+      const response = await axios.get('http://localhost:8080/api/v1/animals');
       const animalsData = response.data.content;
       setAnimals(Array.isArray(animalsData) ? animalsData : []);
     } catch (error) {
@@ -79,7 +76,7 @@ const Vaccine = () => {
       handleUpdate();
     } else {
       try {
-        const response = await axios.post(`${backendUrl}/api/v1/vaccinations`, newVaccine);
+        const response = await axios.post('http://localhost:8080/api/v1/vaccinations', newVaccine);
         setVaccines([...vaccines, response.data]);
         toast.success('Vaccine added successfully!');
         handleClose();
@@ -97,7 +94,7 @@ const Vaccine = () => {
 
   const handleUpdate = async () => {
     try {
-      const response = await axios.put(`${backendUrl}/api/v1/vaccinations/${newVaccine.id}`, newVaccine);
+      const response = await axios.put(`http://localhost:8080/api/v1/vaccinations/${newVaccine.id}`, newVaccine);
       const updatedList = vaccines.map(vac => vac.id === newVaccine.id ? response.data : vac);
       setVaccines(updatedList);
       toast.success('Vaccine updated successfully!');
@@ -110,7 +107,7 @@ const Vaccine = () => {
 
   const handleDelete = async (vaccineId) => {
     try {
-      await axios.delete(`${backendUrl}/api/v1/vaccinations/${vaccineId}`);
+      await axios.delete(`http://localhost:8080/api/v1/vaccinations/${vaccineId}`);
       const newList = vaccines.filter(vaccine => vaccine.id !== vaccineId);
       setVaccines(newList);
       toast.success('Vaccine deleted successfully!');
@@ -159,7 +156,7 @@ const Vaccine = () => {
                 <td>{vaccine.protectionFinishDate}</td>
                 <td>{vaccine.animal?.name || 'N/A'}</td>
                 <td>
-                  <Button variant="info" onClick={() => handleEdit(vaccine)}>Update</Button>
+                  <Button variant="info" onClick={() => handleEdit(vaccine)}>Edit</Button>
                   {' '}
                   <Button variant="danger" onClick={() => handleDelete(vaccine.id)}>Delete</Button>
                 </td>
