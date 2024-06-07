@@ -113,7 +113,7 @@ const Animal = () => {
   return (
     <div>
       <h1 className="mb-4">Animals</h1>
-      <Button variant="primary" onClick={handleShow}>Add Animal</Button>
+      <Button variant="primary" onClick={handleShow} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Add Animal</Button>
       {loading ? (
         <p>Loading...</p>
       ) : (
@@ -143,9 +143,9 @@ const Animal = () => {
                 <td>{animal.species}</td>
                 <td>{animal.customer?.name}</td>
                 <td>
-                  <Button variant="info" onClick={() => handleEdit(animal)}>Edit</Button>
+                  <Button variant="info" onClick={() => handleEdit(animal)} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Update</Button>
                   {' '}
-                  <Button variant="danger" onClick={() => handleDelete(animal.id)}>Delete</Button>
+                  <Button variant="danger" onClick={() => handleDelete(animal.id)} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Delete</Button>
                 </td>
               </tr>
             ))}

@@ -174,7 +174,7 @@ const Appointment = () => {
   return (
     <div>
       <h1 className="mb-4">Appointments</h1>
-      <Button variant="primary" onClick={handleShow}>Add Appointment</Button>
+      <Button variant="primary" onClick={handleShow} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Add Appointment</Button>
       {loading ? (
         <p>Loading...</p>
       ) : (
@@ -200,9 +200,9 @@ const Appointment = () => {
                 <td>{appointment.customerName}</td>
                 <td>{appointment.doctorName}</td>
                 <td>
-                  <Button variant="info" onClick={() => handleEdit(appointment)}>Edit</Button>
+                  <Button variant="info" onClick={() => handleEdit(appointment)} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Update</Button>
                   {' '}
-                  <Button variant="danger" onClick={() => handleDelete(appointment.id)}>Delete</Button>
+                  <Button variant="danger" onClick={() => handleDelete(appointment.id)} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Delete</Button>
                 </td>
               </tr>
             ))}

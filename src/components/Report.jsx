@@ -108,7 +108,7 @@ const Report = () => {
   return (
     <div>
       <h1 className="mb-4">Reports</h1>
-      <Button variant="primary" onClick={handleShow}>Add Report</Button>
+      <Button variant="primary" onClick={handleShow} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Add Report</Button>
       {loading ? (
         <p>Loading...</p>
       ) : (
@@ -142,9 +142,9 @@ const Report = () => {
                   <td>{appointment ? appointment.animalName : 'N/A'}</td>
                   <td>{appointment ? appointment.customerName : 'N/A'}</td>
                   <td>
-                    <Button variant="info" onClick={() => handleEdit(report)}>Edit</Button>
+                    <Button variant="info" onClick={() => handleEdit(report)} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Update</Button>
                     {' '}
-                    <Button variant="danger" onClick={() => handleDelete(report.id)}>Delete</Button>
+                    <Button variant="danger" onClick={() => handleDelete(report.id)} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Delete</Button>
                   </td>
                 </tr>
               );

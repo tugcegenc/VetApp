@@ -130,7 +130,7 @@ const Vaccine = () => {
   return (
     <div>
       <h1 className="mb-4">Vaccines</h1>
-      <Button variant="primary" onClick={handleShow}>Add Vaccine</Button>
+      <Button variant="primary" onClick={handleShow} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Add Vaccine</Button>
       {loading ? (
         <p>Loading...</p>
       ) : (
@@ -156,9 +156,9 @@ const Vaccine = () => {
                 <td>{vaccine.protectionFinishDate}</td>
                 <td>{vaccine.animal?.name || 'N/A'}</td>
                 <td>
-                  <Button variant="info" onClick={() => handleEdit(vaccine)}>Edit</Button>
+                  <Button variant="info" onClick={() => handleEdit(vaccine)} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Update</Button>
                   {' '}
-                  <Button variant="danger" onClick={() => handleDelete(vaccine.id)}>Delete</Button>
+                  <Button variant="danger" onClick={() => handleDelete(vaccine.id)} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Delete</Button>
                 </td>
               </tr>
             ))}

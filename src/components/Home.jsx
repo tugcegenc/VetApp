@@ -1,16 +1,17 @@
 import React from 'react';
 import { Button } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import '../App.css'; 
-import Customer from './Customer';
 
 const Home = () => {
   return (
     <div style={{ backgroundColor: '#d8e7d6', minHeight: '100vh', padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', fontFamily: 'Roboto, sans-serif' }}>
       <h1 style={{ textAlign: 'center', marginBottom: '20px', color: '#ffffff', fontWeight: '500' }}>Welcome to Veterinary Management System</h1>
       <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
-        <Button variant="primary" href="/login" style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Login</Button>
+        <Link to="/customers">
+          <Button variant="primary" style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Login</Button>
+        </Link>
       </div>
-      <Customer/>
     </div>
   );
 };
