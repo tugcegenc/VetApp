@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Table, Button, Modal, Form } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import '../App.css'; 
 
 const Animal = () => {
   const [animals, setAnimals] = useState([]);
@@ -113,7 +114,7 @@ const Animal = () => {
   };
 
   return (
-    <div>
+    <div className='animal-container'>
       <h1 className="mb-4">Animals</h1>
       <Button variant="primary" onClick={handleShow}>Add Animal</Button>
       {loading ? (

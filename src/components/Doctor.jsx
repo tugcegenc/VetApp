@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Table, Button, Modal, Form } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import '../App.css'; 
 
 const Doctor = () => {
   const [doctors, setDoctors] = useState([]);
@@ -170,7 +171,7 @@ const Doctor = () => {
   return (
     <div>
       <h1 className="mb-4">Doctors</h1>
-      <Button variant="primary" onClick={handleShowDoctorModal}>Add Doctor</Button>
+      <Button variant="custom-button " onClick={handleShowDoctorModal}>Add Doctor</Button>
       {loading ? (
         <p>Loading...</p>
       ) : (

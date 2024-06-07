@@ -16,6 +16,7 @@ body {
 
 .container {
   padding: 20px;
+  
 }
 
 h1 {
@@ -28,30 +29,43 @@ h1 {
   object-fit: cover;
 }
 .navbar-light {
-  background-color: #F5F5F5; /* Bej arka plan */
+  background-color: #F5F5F5; 
 }
 
 .nav-link {
-  color: #2196F3; /* Mavi link renkleri */
+  color: #2196F3; 
 }
 
 .nav-link:hover {
-  color: #4CAF50; /* Yeşil hover renkleri */
+  color: #4CAF50; 
 }
-/* App.css */
+
 .bg-custom {
   background-color: #E8EAF6!important;
 }
  .footer {
-  background-color: #F5F5F5; /* Bej arka plan */
-  color: #333; /* Metin rengi */
-  border-top: 1px solid #E7E7E7; /* Üst kenar çizgisi */
+  background-color: #F5F5F5; 
+  color: #333; 
+  border-top: 1px solid #E7E7E7; 
 }
 
 .footer a {
-  color: #2196F3; /* Link renkleri */
+  color: #2196F3; 
 }
 
 .footer a:hover {
-  color: #4CAF50; /* Hover renkleri */
+  color: #4CAF50; 
+}
+.custom-navbar {
+  background-color: #a4c2a8 !important;
+}
+.animal-container{
+  background-color: #E4F5E5;
+  min-height: 100vh
+}
+
+.custom-button-primary {
+  background-color: #4CAF50;
+  border-color: #4CAF50;
+  color: #333;
 }

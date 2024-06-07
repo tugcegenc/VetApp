@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './components/Home';
 import Customer from './components/Customer';
-import Footer from './components/Footer'; // Footer bileşenini import edin
 import './App.css';
 import Doctor from './components/Doctor';
 import Vaccination from './components/Vaccination';
@@ -28,7 +27,7 @@ function App() {
            
           </Switch>
         </div>
-        <Footer /> 
+     
       </div>
     </Router>
   );
