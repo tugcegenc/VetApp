@@ -3,7 +3,6 @@ import axios from 'axios';
 import { Table, Button, Modal, Form } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import config from './config';
 
 const Animal = () => {
   const [animals, setAnimals] = useState([]);
@@ -11,6 +10,8 @@ const Animal = () => {
   const [show, setShow] = useState(false);
   const [newAnimal, setNewAnimal] = useState({ id: null, name: '', breed: '', colour: '', date_of_birth: '', gender: '', species: '', customer_id: '' });
   const [loading, setLoading] = useState(false);
+
+  const backendUrl = 'https://vet-app-jb21.onrender.com';
 
   useEffect(() => {
     fetchAnimals();
@@ -20,7 +21,7 @@ const Animal = () => {
   const fetchAnimals = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${config.backendUrl}/api/v1/animals`);
+      const response = await axios.get(`${backendUrl}/api/v1/animals`);
       console.log('Animals API Response:', response.data);
       const animalsData = response.data.content.map(animal => ({
         ...animal,
@@ -37,7 +38,7 @@ const Animal = () => {
 
   const fetchCustomers = async () => {
     try {
-      const response = await axios.get(`${config.backendUrl}/api/v1/customers`);
+      const response = await axios.get(`${backendUrl}/api/v1/customers`);
       console.log('Customers API Response:', response.data);
       const customersData = response.data.content;
       setCustomers(Array.isArray(customersData) ? customersData : []);
@@ -61,7 +62,7 @@ const Animal = () => {
         const animalToSave = { ...newAnimal, dateOfBirth: newAnimal.date_of_birth, customer: { id: newAnimal.customer_id } };
         delete animalToSave.date_of_birth;
         console.log('Saving animal:', animalToSave);
-        const response = await axios.post(`${config.backendUrl}/api/v1/animals`, animalToSave);
+        const response = await axios.post(`${backendUrl}/api/v1/animals`, animalToSave);
         setAnimals([...animals, response.data]);
         toast.success('Animal added successfully!');
         handleClose();
@@ -82,7 +83,7 @@ const Animal = () => {
     try {
       const animalToUpdate = { ...newAnimal, dateOfBirth: newAnimal.date_of_birth, customer: { id: newAnimal.customer_id } };
       delete animalToUpdate.date_of_birth;
-      const response = await axios.put(`${config.backendUrl}/api/v1/animals/${newAnimal.id}`, animalToUpdate);
+      const response = await axios.put(`${backendUrl}/api/v1/animals/${newAnimal.id}`, animalToUpdate);
       const updatedList = animals.map(an => an.id === newAnimal.id ? response.data : an);
       setAnimals(updatedList);
       toast.success('Animal updated successfully!');
@@ -96,7 +97,7 @@ const Animal = () => {
 
   const handleDelete = async (animalId) => {
     try {
-      await axios.delete(`${config.backendUrl}/api/v1/animals/${animalId}`);
+      await axios.delete(`${backendUrl}/api/v1/animals/${animalId}`);
       const newList = animals.filter(animal => animal.id !== animalId);
       setAnimals(newList);
       toast.success('Animal deleted successfully!');

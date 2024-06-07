@@ -2,7 +2,7 @@ import React from 'react';
 
 const Logo = () => (
     <div style={{ display: 'flex', alignItems: 'center' }}>
-        <svg className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-fhv4y1" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="PetsIcon" width="30" height="auto" fill="#000000">
+        <svg className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-fhv4y1" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="PetsIcon" width="30" height="30" fill="#000000">
             <circle cx="4.5" cy="9.5" r="2.5"></circle>
             <circle cx="9" cy="5.5" r="2.5"></circle>
             <circle cx="15" cy="5.5" r="2.5"></circle>
