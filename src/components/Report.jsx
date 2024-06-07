@@ -142,9 +142,9 @@ const Report = () => {
                   <td>{appointment ? appointment.animalName : 'N/A'}</td>
                   <td>{appointment ? appointment.customerName : 'N/A'}</td>
                   <td>
-                    <Button variant="info" onClick={() => handleEdit(report)} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Update</Button>
+                    <Button variant="primary" onClick={() => handleEdit(report)} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Update</Button>
                     {' '}
-                    <Button variant="danger" onClick={() => handleDelete(report.id)} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Delete</Button>
+                    <Button variant="primary" onClick={() => handleDelete(report.id)} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Delete</Button>
                   </td>
                 </tr>
               );

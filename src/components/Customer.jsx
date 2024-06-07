@@ -115,9 +115,9 @@ const Customer = () => {
                 <td>{customer.address}</td>
                 <td>{customer.email}</td>
                 <td>
-                  <Button variant="info" onClick={() => handleEdit(customer)} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Update</Button>
+                  <Button variant="primary" onClick={() => handleEdit(customer)} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Update</Button>
                   {' '}
-                  <Button variant="danger" onClick={() => handleDelete(customer.id)} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Delete</Button>
+                  <Button variant="primary" onClick={() => handleDelete(customer.id)} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Delete</Button>
                 </td>
               </tr>
             ))}

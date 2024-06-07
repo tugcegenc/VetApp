@@ -156,9 +156,9 @@ const Vaccine = () => {
                 <td>{vaccine.protectionFinishDate}</td>
                 <td>{vaccine.animal?.name || 'N/A'}</td>
                 <td>
-                  <Button variant="info" onClick={() => handleEdit(vaccine)} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Update</Button>
+                  <Button variant="primary" onClick={() => handleEdit(vaccine)} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Update</Button>
                   {' '}
-                  <Button variant="danger" onClick={() => handleDelete(vaccine.id)} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Delete</Button>
+                  <Button variant="primary" onClick={() => handleDelete(vaccine.id)} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Delete</Button>
                 </td>
               </tr>
             ))}

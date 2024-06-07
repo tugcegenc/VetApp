@@ -143,9 +143,9 @@ const Animal = () => {
                 <td>{animal.species}</td>
                 <td>{animal.customer?.name}</td>
                 <td>
-                  <Button variant="info" onClick={() => handleEdit(animal)} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Update</Button>
+                  <Button variant="primary" onClick={() => handleEdit(animal)} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Update</Button>
                   {' '}
-                  <Button variant="danger" onClick={() => handleDelete(animal.id)} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Delete</Button>
+                  <Button variant="primary" onClick={() => handleDelete(animal.id)} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Delete</Button>
                 </td>
               </tr>
             ))}

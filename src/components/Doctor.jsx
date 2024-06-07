@@ -195,9 +195,9 @@ const Doctor = () => {
                   <td>{doctor.address}</td>
                   <td>{doctor.email}</td>
                   <td>
-                    <Button variant="info" onClick={() => handleEditDoctor(doctor)} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Update</Button>
+                    <Button variant="primary" onClick={() => handleEditDoctor(doctor)} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Update</Button>
                     {' '}
-                    <Button variant="danger" onClick={() => handleDeleteDoctor(doctor.id)} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Delete</Button>
+                    <Button variant="primary" onClick={() => handleDeleteDoctor(doctor.id)} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Delete</Button>
                   </td>
                 </tr>
               ))}
@@ -222,9 +222,9 @@ const Doctor = () => {
                   <td>{workDay.doctorName}</td>
                   <td>{workDay.workDate}</td>
                   <td>
-                    <Button variant="info" onClick={() => handleEditWorkDay(workDay)} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Update</Button>
+                    <Button variant="primary" onClick={() => handleEditWorkDay(workDay)} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Update</Button>
                     {' '}
-                    <Button variant="danger" onClick={() => handleDeleteWorkDay(workDay.id)} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Delete</Button>
+                    <Button variant="primary" onClick={() => handleDeleteWorkDay(workDay.id)} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Delete</Button>
                   </td>
                 </tr>
               ))}
