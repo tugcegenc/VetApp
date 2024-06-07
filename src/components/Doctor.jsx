@@ -197,7 +197,7 @@ const Doctor = () => {
                   <td>{doctor.address}</td>
                   <td>{doctor.email}</td>
                   <td>
-                    <Button variant="info" onClick={() => handleEditDoctor(doctor)}>Edit</Button>
+                    <Button variant="info" onClick={() => handleEditDoctor(doctor)}>Update</Button>
                     {' '}
                     <Button variant="danger" onClick={() => handleDeleteDoctor(doctor.id)}>Delete</Button>
                   </td>
@@ -224,7 +224,7 @@ const Doctor = () => {
                   <td>{workDay.doctorName}</td>
                   <td>{workDay.workDate}</td>
                   <td>
-                    <Button variant="info" onClick={() => handleEditWorkDay(workDay)}>Edit</Button>
+                    <Button variant="info" onClick={() => handleEditWorkDay(workDay)}>Update</Button>
                     {' '}
                     <Button variant="danger" onClick={() => handleDeleteWorkDay(workDay.id)}>Delete</Button>
                   </td>

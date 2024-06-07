@@ -145,7 +145,7 @@ const Animal = () => {
                 <td>{animal.species}</td>
                 <td>{animal.customer?.name}</td>
                 <td>
-                  <Button variant="info" onClick={() => handleEdit(animal)}>Edit</Button>
+                  <Button variant="info" onClick={() => handleEdit(animal)}>Update</Button>
                   {' '}
                   <Button variant="danger" onClick={() => handleDelete(animal.id)}>Delete</Button>
                 </td>
