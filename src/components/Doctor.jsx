@@ -23,7 +23,7 @@ const Doctor = () => {
   const fetchDoctors = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:8080/api/v1/doctors');
+      const response = await axios.get('https://vet-app-jb21.onrender.com/api/v1/doctors');
       const doctorsData = response.data.content;
       setDoctors(Array.isArray(doctorsData) ? doctorsData : []);
       fetchWorkDays(); // fetchWorkDays fonksiyonunu burada çağırıyoruz ve doctorsData'yı parametre olarak geçiyoruz
@@ -37,7 +37,7 @@ const Doctor = () => {
   const fetchWorkDays = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:8080/api/v1/available-dates');
+      const response = await axios.get('https://vet-app-jb21.onrender.com/api/v1/available-dates');
       const workDaysData = response.data.content.map(workDay => ({
         ...workDay,
         workDate: workDay.workDay ? new Date(workDay.workDay).toISOString().split('T')[0] : '',
@@ -68,7 +68,7 @@ const Doctor = () => {
       handleUpdateDoctor();
     } else {
       try {
-        const response = await axios.post('http://localhost:8080/api/v1/doctors', newDoctor);
+        const response = await axios.post('https://vet-app-jb21.onrender.com/api/v1/doctors', newDoctor);
         setDoctors([...doctors, response.data]);
         toast.success('Doctor added successfully!');
         handleCloseDoctorModal();
@@ -86,7 +86,7 @@ const Doctor = () => {
 
   const handleUpdateDoctor = async () => {
     try {
-      const response = await axios.put(`http://localhost:8080/api/v1/doctors/${newDoctor.id}`, newDoctor);
+      const response = await axios.put(`https://vet-app-jb21.onrender.com/api/v1/doctors/${newDoctor.id}`, newDoctor);
       const updatedList = doctors.map(doc => doc.id === newDoctor.id ? response.data : doc);
       setDoctors(updatedList);
       toast.success('Doctor updated successfully!');
@@ -99,7 +99,7 @@ const Doctor = () => {
 
   const handleDeleteDoctor = async (doctorId) => {
     try {
-      await axios.delete(`http://localhost:8080/api/v1/doctors/${doctorId}`);
+      await axios.delete(`https://vet-app-jb21.onrender.com/api/v1/doctors/${doctorId}`);
       const newList = doctors.filter(doctor => doctor.id !== doctorId);
       setDoctors(newList);
       toast.success('Doctor deleted successfully!');
@@ -114,7 +114,7 @@ const Doctor = () => {
       handleUpdateWorkDay();
     } else {
       try {
-        const response = await axios.post('http://localhost:8080/api/v1/available-dates', newWorkDay);
+        const response = await axios.post('https://vet-app-jb21.onrender.com/api/v1/available-dates', newWorkDay);
         setWorkDays([...workDays, response.data]);
         toast.success('Work day added successfully!');
         handleCloseWorkDayModal();
@@ -132,7 +132,7 @@ const Doctor = () => {
 
   const handleUpdateWorkDay = async () => {
     try {
-      const response = await axios.put(`http://localhost:8080/api/v1/available-dates/${newWorkDay.id}`, newWorkDay);
+      const response = await axios.put(`https://vet-app-jb21.onrender.com/api/v1/available-dates/${newWorkDay.id}`, newWorkDay);
       const updatedList = workDays.map(wd => wd.id === newWorkDay.id ? response.data : wd);
       setWorkDays(updatedList);
       toast.success('Work day updated successfully!');
@@ -145,7 +145,7 @@ const Doctor = () => {
 
   const handleDeleteWorkDay = async (workDayId) => {
     try {
-      await axios.delete(`http://localhost:8080/api/v1/available-dates/${workDayId}`);
+      await axios.delete(`https://vet-app-jb21.onrender.com/api/v1/available-dates/${workDayId}`);
       const newList = workDays.filter(workDay => workDay.id !== workDayId);
       setWorkDays(newList);
       toast.success('Work day deleted successfully!');

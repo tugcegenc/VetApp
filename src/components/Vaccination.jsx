@@ -29,7 +29,7 @@ const Vaccine = () => {
   const fetchVaccines = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:8080/api/v1/vaccinations');
+      const response = await axios.get('https://vet-app-jb21.onrender.com/api/v1/vaccinations');
       const vaccinesData = response.data.content.map(vaccine => ({
         ...vaccine,
         protectionStartDate: vaccine.protectionStartDate ? new Date(vaccine.protectionStartDate).toISOString().split('T')[0] : '',
@@ -46,7 +46,7 @@ const Vaccine = () => {
 
   const fetchAnimals = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/api/v1/animals');
+      const response = await axios.get('https://vet-app-jb21.onrender.com/api/v1/animals');
       const animalsData = response.data.content;
       setAnimals(Array.isArray(animalsData) ? animalsData : []);
     } catch (error) {
@@ -76,7 +76,7 @@ const Vaccine = () => {
       handleUpdate();
     } else {
       try {
-        const response = await axios.post('http://localhost:8080/api/v1/vaccinations', newVaccine);
+        const response = await axios.post('https://vet-app-jb21.onrender.com/api/v1/vaccinations', newVaccine);
         setVaccines([...vaccines, response.data]);
         toast.success('Vaccine added successfully!');
         handleClose();
@@ -94,7 +94,7 @@ const Vaccine = () => {
 
   const handleUpdate = async () => {
     try {
-      const response = await axios.put(`http://localhost:8080/api/v1/vaccinations/${newVaccine.id}`, newVaccine);
+      const response = await axios.put(`https://vet-app-jb21.onrender.com/api/v1/vaccinations/${newVaccine.id}`, newVaccine);
       const updatedList = vaccines.map(vac => vac.id === newVaccine.id ? response.data : vac);
       setVaccines(updatedList);
       toast.success('Vaccine updated successfully!');
@@ -107,7 +107,7 @@ const Vaccine = () => {
 
   const handleDelete = async (vaccineId) => {
     try {
-      await axios.delete(`http://localhost:8080/api/v1/vaccinations/${vaccineId}`);
+      await axios.delete(`https://vet-app-jb21.onrender.com/api/v1/vaccinations/${vaccineId}`);
       const newList = vaccines.filter(vaccine => vaccine.id !== vaccineId);
       setVaccines(newList);
       toast.success('Vaccine deleted successfully!');

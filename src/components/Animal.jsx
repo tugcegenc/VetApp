@@ -10,6 +10,8 @@ const Animal = () => {
   const [show, setShow] = useState(false);
   const [newAnimal, setNewAnimal] = useState({ id: null, name: '', breed: '', colour: '', date_of_birth: '', gender: '', species: '', customer_id: '' });
   const [loading, setLoading] = useState(false);
+  const [searchName, setSearchName] = useState('');
+  const [searchCustomerName, setSearchCustomerName] = useState('');
 
   useEffect(() => {
     fetchAnimals();
@@ -19,7 +21,7 @@ const Animal = () => {
   const fetchAnimals = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:8080/api/v1/animals');
+      const response = await axios.get('https://vet-app-jb21.onrender.com/api/v1/animals');
       console.log('Animals API Response:', response.data);
       const animalsData = response.data.content.map(animal => ({
         ...animal,
@@ -36,13 +38,53 @@ const Animal = () => {
 
   const fetchCustomers = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/api/v1/customers');
+      const response = await axios.get('https://vet-app-jb21.onrender.com/api/v1/customers');
       console.log('Customers API Response:', response.data);
       const customersData = response.data.content;
       setCustomers(Array.isArray(customersData) ? customersData : []);
     } catch (error) {
       console.error('There was an error fetching the customers!', error);
       toast.error('There was an error fetching the customers.');
+    }
+  };
+
+  const fetchAnimalsByName = async (name) => {
+    setLoading(true);
+    try {
+      const response = await axios.get('https://vet-app-jb21.onrender.com/api/v1/animals/searchByName', {
+        params: { name }
+      });
+      console.log('Animals by Name API Response:', response.data);
+      const animalsData = response.data.content.map(animal => ({
+        ...animal,
+        date_of_birth: animal.dateOfBirth ? new Date(animal.dateOfBirth).toISOString().split('T')[0] : ''
+      }));
+      setAnimals(Array.isArray(animalsData) ? animalsData : []);
+    } catch (error) {
+      console.error('There was an error fetching the animals by name!', error);
+      toast.error('There was an error fetching the animals by name.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchAnimalsByCustomer = async (customerName) => {
+    setLoading(true);
+    try {
+      const response = await axios.get('hhttps://vet-app-jb21.onrender.com/api/v1/animals/searchByCustomer', {
+        params: { customerName }
+      });
+      console.log('Animals by Customer API Response:', response.data);
+      const animalsData = response.data.content.map(animal => ({
+        ...animal,
+        date_of_birth: animal.dateOfBirth ? new Date(animal.dateOfBirth).toISOString().split('T')[0] : ''
+      }));
+      setAnimals(Array.isArray(animalsData) ? animalsData : []);
+    } catch (error) {
+      console.error('There was an error fetching the animals by customer!', error);
+      toast.error('There was an error fetching the animals by customer.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -60,11 +102,11 @@ const Animal = () => {
         const animalToSave = { ...newAnimal, dateOfBirth: newAnimal.date_of_birth, customer: { id: newAnimal.customer_id } };
         delete animalToSave.date_of_birth;
         console.log('Saving animal:', animalToSave);
-        const response = await axios.post('http://localhost:8080/api/v1/animals', animalToSave);
+        const response = await axios.post('https://vet-app-jb21.onrender.com/api/v1/animals', animalToSave);
         setAnimals([...animals, response.data]);
         toast.success('Animal added successfully!');
         handleClose();
-        fetchAnimals(); 
+        fetchAnimals();
       } catch (error) {
         console.error('There was an error saving the animal!', error.response ? error.response.data : error);
         toast.error('There was an error saving the animal. ' + (error.response ? error.response.data.message : error.message));
@@ -81,12 +123,12 @@ const Animal = () => {
     try {
       const animalToUpdate = { ...newAnimal, dateOfBirth: newAnimal.date_of_birth, customer: { id: newAnimal.customer_id } };
       delete animalToUpdate.date_of_birth;
-      const response = await axios.put(`http://localhost:8080/api/v1/animals/${newAnimal.id}`, animalToUpdate);
+      const response = await axios.put(`https://vet-app-jb21.onrender.com/api/v1/animals/${newAnimal.id}`, animalToUpdate);
       const updatedList = animals.map(an => an.id === newAnimal.id ? response.data : an);
       setAnimals(updatedList);
       toast.success('Animal updated successfully!');
       handleClose();
-      fetchAnimals();  
+      fetchAnimals();
     } catch (error) {
       console.error('Update error:', error);
       toast.error('There was an error updating the animal.');
@@ -95,7 +137,7 @@ const Animal = () => {
 
   const handleDelete = async (animalId) => {
     try {
-      await axios.delete(`http://localhost:8080/api/v1/animals/${animalId}`);
+      await axios.delete(`https://vet-app-jb21.onrender.com/api/v1/animals/${animalId}`);
       const newList = animals.filter(animal => animal.id !== animalId);
       setAnimals(newList);
       toast.success('Animal deleted successfully!');
@@ -113,6 +155,28 @@ const Animal = () => {
   return (
     <div>
       <h1 className="mb-4">Animals</h1>
+      <div className="d-flex mb-3">
+        <Form.Control
+          type="text"
+          placeholder="Search by animal name"
+          value={searchName}
+          onChange={(e) => setSearchName(e.target.value)}
+          style={{ marginRight: '10px' }}
+        />
+        <Button onClick={() => fetchAnimalsByName(searchName)} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500', marginRight: '10px' }}>
+          Search
+        </Button>
+        <Form.Control
+          type="text"
+          placeholder="Search by customer name"
+          value={searchCustomerName}
+          onChange={(e) => setSearchCustomerName(e.target.value)}
+          style={{ marginRight: '10px' }}
+        />
+        <Button onClick={() => fetchAnimalsByCustomer(searchCustomerName)} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>
+          Search
+        </Button>
+      </div>
       <Button variant="primary" onClick={handleShow} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Add Animal</Button>
       {loading ? (
         <p>Loading...</p>

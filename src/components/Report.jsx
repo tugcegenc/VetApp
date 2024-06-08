@@ -19,7 +19,7 @@ const Report = () => {
   const fetchReports = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:8080/api/v1/reports');
+      const response = await axios.get('https://vet-app-jb21.onrender.com/api/v1/reports');
       console.log('Reports API Response:', response.data);
       const reportsData = response.data.content;
       setReports(Array.isArray(reportsData) ? reportsData : []);
@@ -33,7 +33,7 @@ const Report = () => {
 
   const fetchAppointments = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/api/v1/appointments');
+      const response = await axios.get('https://vet-app-jb21.onrender.com/api/v1/appointments');
       console.log('Appointments API Response:', response.data);
       const appointmentsData = response.data.content;
       setAppointments(Array.isArray(appointmentsData) ? appointmentsData : []);
@@ -59,7 +59,7 @@ const Report = () => {
     } else {
       try {
         console.log('Saving report:', newReport);
-        const response = await axios.post('http://localhost:8080/api/v1/reports', newReport);
+        const response = await axios.post('https://vet-app-jb21.onrender.com/api/v1/reports', newReport);
         setReports([...reports, response.data]);
         toast.success('Report added successfully!');
         handleClose();
@@ -77,7 +77,7 @@ const Report = () => {
 
   const handleUpdate = async () => {
     try {
-      const response = await axios.put(`http://localhost:8080/api/v1/reports/${newReport.id}`, newReport);
+      const response = await axios.put(`https://vet-app-jb21.onrender.com/api/v1/reports/${newReport.id}`, newReport);
       const updatedList = reports.map(rep => rep.id === newReport.id ? response.data : rep);
       setReports(updatedList);
       toast.success('Report updated successfully!');
@@ -90,7 +90,7 @@ const Report = () => {
 
   const handleDelete = async (reportId) => {
     try {
-      await axios.delete(`http://localhost:8080/api/v1/reports/${reportId}`);
+      await axios.delete(`https://vet-app-jb21.onrender.com/api/v1/reports/${reportId}`);
       const newList = reports.filter(report => report.id !== reportId);
       setReports(newList);
       toast.success('Report deleted successfully!');

@@ -4,11 +4,13 @@ import { Table, Button, Modal, Form } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+
 const Customer = () => {
   const [customers, setCustomers] = useState([]);
   const [show, setShow] = useState(false);
   const [newCustomer, setNewCustomer] = useState({ id: null, name: '', phone: '', city: '', address: '', email: '' });
   const [loading, setLoading] = useState(false);
+  const [searchName, setSearchName] = useState('');
 
   useEffect(() => {
     fetchCustomers();
@@ -17,13 +19,30 @@ const Customer = () => {
   const fetchCustomers = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:8080/api/v1/customers');
+      const response = await axios.get('https://vet-app-jb21.onrender.com/api/v1/customers');
       console.log('API Response:', response.data); 
       const customersData = response.data.content; 
       setCustomers(Array.isArray(customersData) ? customersData : []);
     } catch (error) {
       console.error('There was an error fetching the customers!', error);
       toast.error('There was an error fetching the customers.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchCustomersByName = async (name) => {
+    setLoading(true);
+    try {
+      const response = await axios.get('https://vet-app-jb21.onrender.com/api/v1/customers/searchByName', {
+        params: { name }
+      });
+      console.log('Customers by Name API Response:', response.data);
+      const customersData = response.data.content;
+      setCustomers(Array.isArray(customersData) ? customersData : []);
+    } catch (error) {
+      console.error('There was an error fetching the customers by name!', error);
+      toast.error('There was an error fetching the customers by name.');
     } finally {
       setLoading(false);
     }
@@ -40,7 +59,7 @@ const Customer = () => {
       handleUpdate();
     } else {
       try {
-        const response = await axios.post('http://localhost:8080/api/v1/customers', newCustomer);
+        const response = await axios.post('https://vet-app-jb21.onrender.com/api/v1/customers', newCustomer);
         setCustomers([...customers, response.data]);
         toast.success('Customer added successfully!');
         handleClose();
@@ -58,7 +77,7 @@ const Customer = () => {
 
   const handleUpdate = async () => {
     try {
-      const response = await axios.put(`http://localhost:8080/api/v1/customers/${newCustomer.id}`, newCustomer);
+      const response = await axios.put(`https://vet-app-jb21.onrender.com/api/v1/customers/${newCustomer.id}`, newCustomer);
       const updatedList = customers.map(cust => cust.id === newCustomer.id ? response.data : cust);
       setCustomers(updatedList);
       toast.success('Customer updated successfully!');
@@ -71,7 +90,7 @@ const Customer = () => {
 
   const handleDelete = async (customerId) => {
     try {
-      await axios.delete(`http://localhost:8080/api/v1/customers/${customerId}`);
+      await axios.delete(`https://vet-app-jb21.onrender.com/api/v1/customers/${customerId}`);
       const newList = customers.filter(customer => customer.id !== customerId);
       setCustomers(newList);
       toast.success('Customer deleted successfully!');
@@ -89,6 +108,17 @@ const Customer = () => {
   return (
     <div>
       <h1 className="mb-4">Customers</h1>
+      <div className="d-flex justify-content-between mb-3 search-container">
+        <div className="d-flex search-box">
+          <Form.Control
+            type="text"
+            placeholder="Search by customer name"
+            value={searchName}
+            onChange={(e) => setSearchName(e.target.value)}
+          />
+          <Button onClick={() => fetchCustomersByName(searchName)} className="search-button">Search</Button>
+        </div>
+      </div>
       <Button variant="primary" onClick={handleShow} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Add Customer</Button>
       {loading ? (
         <p>Loading...</p>
