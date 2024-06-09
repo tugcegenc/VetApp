@@ -14,14 +14,9 @@ const Vaccine = () => {
     code: '',
     protectionStartDate: '',
     protectionFinishDate: '',
-    animalWithoutCustomer: {
+    animal: {
       id: '',
-      name: '',
-      species: '',
-      breed: '',
-      gender: '',
-      dateOfBirth: '',
-      colour: ''
+      name: ''
     }
   });
   const [loading, setLoading] = useState(false);
@@ -42,7 +37,7 @@ const Vaccine = () => {
         ...vaccine,
         protectionStartDate: vaccine.protectionStartDate ? new Date(vaccine.protectionStartDate).toISOString().split('T')[0] : '',
         protectionFinishDate: vaccine.protectionFinishDate ? new Date(vaccine.protectionFinishDate).toISOString().split('T')[0] : '',
-        animalWithoutCustomer: vaccine.animalWithoutCustomer || { id: '', name: '' }
+        animal: vaccine.animal || { id: '', name: '' }
       }));
       setVaccines(Array.isArray(vaccinesData) ? vaccinesData : []);
     } catch (error) {
@@ -74,7 +69,7 @@ const Vaccine = () => {
         ...vaccine,
         protectionStartDate: vaccine.protectionStartDate ? new Date(vaccine.protectionStartDate).toISOString().split('T')[0] : '',
         protectionFinishDate: vaccine.protectionFinishDate ? new Date(vaccine.protectionFinishDate).toISOString().split('T')[0] : '',
-        animalWithoutCustomer: vaccine.animalWithoutCustomer || { id: '', name: '' }
+        animal: vaccine.animal || { id: '', name: '' }
       }));
       setVaccines(Array.isArray(vaccinesData) ? vaccinesData : []);
     } catch (error) {
@@ -94,7 +89,7 @@ const Vaccine = () => {
         ...vaccine,
         protectionStartDate: vaccine.protectionStartDate ? new Date(vaccine.protectionStartDate).toISOString().split('T')[0] : '',
         protectionFinishDate: vaccine.protectionFinishDate ? new Date(vaccine.protectionFinishDate).toISOString().split('T')[0] : '',
-        animalWithoutCustomer: vaccine.animalWithoutCustomer || { id: '', name: '' }
+        animal: vaccine.animal || { id: '', name: '' }
       }));
       setVaccines(Array.isArray(vaccinesData) ? vaccinesData : []);
     } catch (error) {
@@ -112,24 +107,19 @@ const Vaccine = () => {
       code: '',
       protectionStartDate: '',
       protectionFinishDate: '',
-      animalWithoutCustomer: {
+      animal: {
         id: '',
-        name: '',
-        species: '',
-        breed: '',
-        gender: '',
-        dateOfBirth: '',
-        colour: ''
+        name: ''
       }
     });
     setShow(false);
   };
 
   const handleSave = async () => {
-    const animal = animals.find(an => an.id === parseInt(newVaccine.animalWithoutCustomer.id));
+    const animal = animals.find(an => an.id === parseInt(newVaccine.animal.id));
     const formattedVaccine = {
       ...newVaccine,
-      animalWithoutCustomer: animal ? { id: animal.id, name: animal.name } : {}
+      animal: animal ? { id: animal.id, name: animal.name } : {}
     };
 
     if (newVaccine.id) {
@@ -150,21 +140,16 @@ const Vaccine = () => {
   };
 
   const handleEdit = (vaccine) => {
-    const animal = animals.find(an => an.id === vaccine.animalWithoutCustomer.id) || {};
+    const animal = animals.find(an => an.id === vaccine.animal.id) || {};
     setNewVaccine({
       id: vaccine.id,
       name: vaccine.name,
       code: vaccine.code,
       protectionStartDate: vaccine.protectionStartDate,
       protectionFinishDate: vaccine.protectionFinishDate,
-      animalWithoutCustomer: {
+      animal: {
         id: animal.id || '',
-        name: animal.name || '',
-        species: animal.species || '',
-        breed: animal.breed || '',
-        gender: animal.gender || '',
-        dateOfBirth: animal.dateOfBirth || '',
-        colour: animal.colour || ''
+        name: animal.name || ''
       }
     });
     setShow(true);
@@ -197,12 +182,12 @@ const Vaccine = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (name.startsWith('animalWithoutCustomer')) {
+    if (name.startsWith('animal')) {
       const field = name.split('.')[1];
       setNewVaccine({
         ...newVaccine,
-        animalWithoutCustomer: {
-          ...newVaccine.animalWithoutCustomer,
+        animal: {
+          ...newVaccine.animal,
           [field]: value
         }
       });
@@ -271,7 +256,7 @@ const Vaccine = () => {
                 <td>{vaccine.code}</td>
                 <td>{vaccine.protectionStartDate}</td>
                 <td>{vaccine.protectionFinishDate}</td>
-                <td>{vaccine.animalWithoutCustomer?.name || 'N/A'}</td>
+                <td>{vaccine.animal?.name || 'N/A'}</td>
                 <td>
                   <Button variant="info" onClick={() => handleEdit(vaccine)}>Edit</Button>
                   {' '}
@@ -331,8 +316,8 @@ const Vaccine = () => {
               <Form.Label>Animal</Form.Label>
               <Form.Control
                 as="select"
-                name="animalWithoutCustomer.id"
-                value={newVaccine.animalWithoutCustomer.id}
+                name="animal.id"
+                value={newVaccine.animal.id}
                 onChange={handleChange}
               >
                 <option value="">Select Animal</option>

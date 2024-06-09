@@ -176,11 +176,11 @@ const Appointment = () => {
   };
 
   const handleEdit = (appointment) => {
-    const [date, time] = appointment.appointmentDate.split('T');
+    const localDateTime = new Date(appointment.appointmentDate);
     setNewAppointment({
       id: appointment.id,
-      date: date,
-      time: time.split(':00.000Z')[0],
+      date: localDateTime.toISOString().split('T')[0],
+      time: localDateTime.toTimeString().split(' ')[0],
       animalId: appointment.animal.id,
       doctorId: appointment.doctor.id
     });
