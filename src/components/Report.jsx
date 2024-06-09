@@ -35,14 +35,7 @@ const Report = () => {
     try {
       const response = await axios.get('https://vet-app-jb21.onrender.com/api/v1/appointments');
       console.log('Appointments API Response:', response.data);
-      const appointmentsData = response.data.content.map(appointment => ({
-        ...appointment,
-        date: appointment.appointmentDate ? new Date(appointment.appointmentDate).toLocaleDateString() : '',
-        time: appointment.appointmentDate ? new Date(appointment.appointmentDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '',
-        doctorName: appointment.doctor ? appointment.doctor.name : 'N/A',
-        animalName: appointment.animal ? appointment.animal.name : 'N/A',
-        customerName: appointment.animal && appointment.animal.customer ? appointment.animal.customer.name : 'N/A'
-      }));
+      const appointmentsData = response.data.content;
       setAppointments(Array.isArray(appointmentsData) ? appointmentsData : []);
     } catch (error) {
       console.error('There was an error fetching the appointments!', error);
@@ -70,7 +63,6 @@ const Report = () => {
         setReports([...reports, response.data]);
         toast.success('Report added successfully!');
         handleClose();
-        fetchReports(); // Veri kaydedildikten sonra verileri tekrar çek
       } catch (error) {
         console.error('There was an error saving the report!', error.response ? error.response.data : error);
         toast.error('There was an error saving the report. ' + (error.response ? error.response.data.message : error.message));
@@ -137,15 +129,15 @@ const Report = () => {
           </thead>
           <tbody>
             {reports.map(report => {
-              const appointment = appointments.find(app => app.id === report.appointmentId);
+              const appointment = report.appointment; 
               return (
                 <tr key={report.id}>
                   <td>{report.id}</td>
                   <td>{report.title}</td>
                   <td>{report.diagnosis}</td>
                   <td>{report.price}</td>
-                  <td>{appointment ? appointment.date : 'N/A'}</td>
-                  <td>{appointment ? appointment.time : 'N/A'}</td>
+                  <td>{appointment ? new Date(appointment.date).toLocaleDateString() : 'N/A'}</td>
+                  <td>{appointment ? new Date(appointment.date).toLocaleTimeString() : 'N/A'}</td>
                   <td>{appointment ? appointment.doctorName : 'N/A'}</td>
                   <td>{appointment ? appointment.animalName : 'N/A'}</td>
                   <td>{appointment ? appointment.customerName : 'N/A'}</td>
@@ -207,7 +199,7 @@ const Report = () => {
               >
                 <option value="">Select Appointment</option>
                 {appointments.map(appointment => (
-                  <option key={appointment.id} value={appointment.id}>{appointment.date} {appointment.time}</option>
+                  <option key={appointment.id} value={appointment.id}>{new Date(appointment.appointmentDate).toLocaleString()}</option>
                 ))}
               </Form.Control>
             </Form.Group>
