@@ -117,19 +117,12 @@ const Vaccine = () => {
   };
 
   const handleSave = async () => {
-    const animal = animals.find(an => an.id === parseInt(newVaccine.animal.id));
-    const formattedVaccine = {
-      ...newVaccine,
-      animal: animal ? { id: animal.id, name: animal.name } : {}
-    };
-
     if (newVaccine.id) {
-      handleUpdate(formattedVaccine);
+      handleUpdate();
     } else {
       try {
-        console.log('Saving vaccine:', formattedVaccine);
-        console.log('Formatted vaccine:', JSON.stringify(formattedVaccine, null, 2));
-        const response = await axios.post('https://vet-app-jb21.onrender.com/api/v1/vaccinations', formattedVaccine);
+        console.log('Saving vaccine:', newVaccine);
+        const response = await axios.post('https://vet-app-jb21.onrender.com/api/v1/vaccinations', newVaccine);
         setVaccines([...vaccines, response.data]);
         toast.success('Vaccine added successfully!');
         handleClose();
@@ -142,24 +135,13 @@ const Vaccine = () => {
   };
 
   const handleEdit = (vaccine) => {
-    const animal = animals.find(an => an.id === vaccine.animal.id) || {};
-    setNewVaccine({
-      id: vaccine.id,
-      name: vaccine.name,
-      code: vaccine.code,
-      protectionStartDate: vaccine.protectionStartDate,
-      protectionFinishDate: vaccine.protectionFinishDate,
-      animal: {
-        id: animal.id || '',
-        name: animal.name || ''
-      }
-    });
+    setNewVaccine(vaccine);
     setShow(true);
   };
 
-  const handleUpdate = async (formattedVaccine) => {
+  const handleUpdate = async () => {
     try {
-      const response = await axios.put(`https://vet-app-jb21.onrender.com/api/v1/vaccinations/${newVaccine.id}`, formattedVaccine);
+      const response = await axios.put(`https://vet-app-jb21.onrender.com/api/v1/vaccinations/${newVaccine.id}`, newVaccine);
       const updatedList = vaccines.map(vac => vac.id === newVaccine.id ? response.data : vac);
       setVaccines(updatedList);
       toast.success('Vaccine updated successfully!');
@@ -185,14 +167,8 @@ const Vaccine = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name.startsWith('animal')) {
-      const field = name.split('.')[1];
-      setNewVaccine({
-        ...newVaccine,
-        animal: {
-          ...newVaccine.animal,
-          [field]: value
-        }
-      });
+      const selectedAnimal = animals.find(animal => animal.id === parseInt(value));
+      setNewVaccine({ ...newVaccine, animal: selectedAnimal });
     } else {
       setNewVaccine({ ...newVaccine, [name]: value });
     }
@@ -260,7 +236,7 @@ const Vaccine = () => {
                 <td>{vaccine.protectionFinishDate}</td>
                 <td>{vaccine.animal?.name || 'N/A'}</td>
                 <td>
-                  <Button variant="info" onClick={() => handleEdit(vaccine)}>Update</Button>
+                  <Button variant="info" onClick={() => handleEdit(vaccine)}>Edit</Button>
                   {' '}
                   <Button variant="danger" onClick={() => handleDelete(vaccine.id)}>Delete</Button>
                 </td>
@@ -318,7 +294,7 @@ const Vaccine = () => {
               <Form.Label>Animal</Form.Label>
               <Form.Control
                 as="select"
-                name="animal.id"
+                name="animal"
                 value={newVaccine.animal.id}
                 onChange={handleChange}
               >
