@@ -128,6 +128,7 @@ const Vaccine = () => {
     } else {
       try {
         console.log('Saving vaccine:', formattedVaccine);
+        console.log('Formatted vaccine:', JSON.stringify(formattedVaccine, null, 2));
         const response = await axios.post('https://vet-app-jb21.onrender.com/api/v1/vaccinations', formattedVaccine);
         setVaccines([...vaccines, response.data]);
         toast.success('Vaccine added successfully!');
@@ -259,7 +260,7 @@ const Vaccine = () => {
                 <td>{vaccine.protectionFinishDate}</td>
                 <td>{vaccine.animal?.name || 'N/A'}</td>
                 <td>
-                  <Button variant="info" onClick={() => handleEdit(vaccine)}>Edit</Button>
+                  <Button variant="info" onClick={() => handleEdit(vaccine)}>Update</Button>
                   {' '}
                   <Button variant="danger" onClick={() => handleDelete(vaccine.id)}>Delete</Button>
                 </td>
