@@ -5,131 +5,85 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import '../App.css';
 
-const Appointment = () => {
-  const [appointments, setAppointments] = useState([]);
+const Animal = () => {
   const [animals, setAnimals] = useState([]);
-  const [doctors, setDoctors] = useState([]);
+  const [customers, setCustomers] = useState([]);
   const [show, setShow] = useState(false);
-  const [newAppointment, setNewAppointment] = useState({ id: null, date: '', time: '', animalId: '', doctorId: '' });
-  const [workDays, setWorkDays] = useState([]);
+  const [newAnimal, setNewAnimal] = useState({ id: null, name: '', breed: '', colour: '', date_of_birth: '', gender: '', species: '', customer_id: '' });
   const [loading, setLoading] = useState(false);
-  const [searchDoctorId, setSearchDoctorId] = useState('');
-  const [searchAnimalId, setSearchAnimalId] = useState('');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [searchName, setSearchName] = useState('');
+  const [searchCustomer, setSearchCustomer] = useState('');
 
   useEffect(() => {
-    fetchAppointments();
     fetchAnimals();
-    fetchDoctors();
+    fetchCustomers();
   }, []);
 
-  const fetchAppointments = async () => {
-    setLoading(true);
-    try {
-      const response = await axios.get('https://vet-app-jb21.onrender.com/api/v1/appointments');
-      const appointmentsData = response.data.content.map(appointment => {
-        const localDate = new Date(appointment.appointmentDate).toLocaleDateString();
-        const localTime = new Date(appointment.appointmentDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        return {
-          ...appointment,
-          date: localDate,
-          time: localTime,
-          animalName: appointment.animal?.name || '',
-          customerName: appointment.animal?.customer?.name || '',
-          doctorName: appointment.doctor?.name || ''
-        };
-      });
-      setAppointments(Array.isArray(appointmentsData) ? appointmentsData : []);
-    } catch (error) {
-      toast.error('There was an error fetching the appointments.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const fetchAnimals = async () => {
+    setLoading(true);
     try {
       const response = await axios.get('https://vet-app-jb21.onrender.com/api/v1/animals');
-      const animalsData = response.data.content;
+      console.log('Animals API Response:', response.data);
+      const animalsData = response.data.content.map(animal => ({
+        ...animal,
+        date_of_birth: animal.dateOfBirth ? new Date(animal.dateOfBirth).toISOString().split('T')[0] : ''
+      }));
       setAnimals(Array.isArray(animalsData) ? animalsData : []);
     } catch (error) {
+      console.error('There was an error fetching the animals!', error);
       toast.error('There was an error fetching the animals.');
-    }
-  };
-
-  const fetchDoctors = async () => {
-    try {
-      const response = await axios.get('https://vet-app-jb21.onrender.com/api/v1/doctors');
-      const doctorsData = response.data.content;
-      setDoctors(Array.isArray(doctorsData) ? doctorsData : []);
-    } catch (error) {
-      toast.error('There was an error fetching the doctors.');
-    }
-  };
-
-  const fetchWorkDays = async (doctorId) => {
-    try {
-      const response = await axios.get(`https://vet-app-jb21.onrender.com/api/v1/available-dates?doctorId=${doctorId}`);
-      const workDaysData = response.data.content.map(workDay => ({
-        ...workDay,
-        workDate: workDay.workDate ? new Date(workDay.workDate).toISOString().split('T')[0] : ''
-      }));
-      setWorkDays(Array.isArray(workDaysData) ? workDaysData : []);
-      console.log('Work Days:', workDaysData);
-    } catch (error) {
-      console.error('There was an error fetching the work days:', error);
-      toast.error('There was an error fetching the work days.');
-    }
-  };
-
-  const fetchAppointmentsByDoctorAndDateRange = async (doctorId, startDate, endDate) => {
-    setLoading(true);
-    try {
-      const response = await axios.get('https://vet-app-jb21.onrender.com/api/v1/appointments/searchByDoctorAndDateRange', {
-        params: { id: doctorId, startDate, endDate }
-      });
-      const appointmentsData = response.data.content.map(appointment => {
-        const localDate = new Date(appointment.appointmentDate).toLocaleDateString();
-        const localTime = new Date(appointment.appointmentDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        return {
-          ...appointment,
-          date: localDate,
-          time: localTime,
-          animalName: appointment.animal?.name || '',
-          customerName: appointment.animal?.customer?.name || '',
-          doctorName: appointment.doctor?.name || ''
-        };
-      });
-      setAppointments(Array.isArray(appointmentsData) ? appointmentsData : []);
-    } catch (error) {
-      toast.error('There was an error fetching the appointments by doctor and date range.');
     } finally {
       setLoading(false);
     }
   };
 
-  const fetchAppointmentsByAnimalAndDateRange = async (animalId, startDate, endDate) => {
+  const fetchCustomers = async () => {
+    try {
+      const response = await axios.get('https://vet-app-jb21.onrender.com/api/v1/customers');
+      console.log('Customers API Response:', response.data);
+      const customersData = response.data.content;
+      setCustomers(Array.isArray(customersData) ? customersData : []);
+    } catch (error) {
+      console.error('There was an error fetching the customers!', error);
+      toast.error('There was an error fetching the customers.');
+    }
+  };
+
+  const fetchAnimalsByName = async (name) => {
     setLoading(true);
     try {
-      const response = await axios.get('https://vet-app-jb21.onrender.com/api/v1/appointments/searchByAnimalAndDateRange', {
-        params: { id: animalId, startDate, endDate }
+      const response = await axios.get('https://vet-app-jb21.onrender.com/api/v1/animals/searchByName', {
+        params: { name }
       });
-      const appointmentsData = response.data.content.map(appointment => {
-        const localDate = new Date(appointment.appointmentDate).toLocaleDateString();
-        const localTime = new Date(appointment.appointmentDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        return {
-          ...appointment,
-          date: localDate,
-          time: localTime,
-          animalName: appointment.animal?.name || '',
-          customerName: appointment.animal?.customer?.name || '',
-          doctorName: appointment.doctor?.name || ''
-        };
-      });
-      setAppointments(Array.isArray(appointmentsData) ? appointmentsData : []);
+      console.log('Animals by Name API Response:', response.data);
+      const animalsData = response.data.content.map(animal => ({
+        ...animal,
+        date_of_birth: animal.dateOfBirth ? new Date(animal.dateOfBirth).toISOString().split('T')[0] : ''
+      }));
+      setAnimals(Array.isArray(animalsData) ? animalsData : []);
     } catch (error) {
-      toast.error('There was an error fetching the appointments by animal and date range.');
+      console.error('There was an error fetching the animals by name!', error);
+      toast.error('There was an error fetching the animals by name.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchAnimalsByCustomer = async (customerName) => {
+    setLoading(true);
+    try {
+      const response = await axios.get('https://vet-app-jb21.onrender.com/api/v1/animals/searchByCustomer', {
+        params: { customerName }
+      });
+      console.log('Animals by Customer API Response:', response.data);
+      const animalsData = response.data.content.map(animal => ({
+        ...animal,
+        date_of_birth: animal.dateOfBirth ? new Date(animal.dateOfBirth).toISOString().split('T')[0] : ''
+      }));
+      setAnimals(Array.isArray(animalsData) ? animalsData : []);
+    } catch (error) {
+      console.error('There was an error fetching the animals by customer name!', error);
+      toast.error('There was an error fetching the animals by customer name.');
     } finally {
       setLoading(false);
     }
@@ -137,155 +91,90 @@ const Appointment = () => {
 
   const handleShow = () => setShow(true);
   const handleClose = () => {
-    setNewAppointment({ id: null, date: '', time: '', animalId: '', doctorId: '' });
+    setNewAnimal({ id: null, name: '', breed: '', colour: '', date_of_birth: '', gender: '', species: '', customer_id: '' });
     setShow(false);
   };
 
   const handleSave = async () => {
-    if (!newAppointment.date || !newAppointment.time) {
-      toast.error('Please select a date and time.');
-      return;
-    }
-
-    if (newAppointment.id) {
+    if (newAnimal.id) {
       handleUpdate();
     } else {
       try {
-        const animal = animals.find(an => an.id === parseInt(newAppointment.animalId));
-        const doctor = doctors.find(doc => doc.id === parseInt(newAppointment.doctorId));
-        const appointmentDateTime = new Date(`${newAppointment.date}T${newAppointment.time}`).toISOString();  
-        const formattedAppointment = {
-          appointmentDate: appointmentDateTime,
-          doctor: doctor,
-          animal: animal
-        };
-        console.log('Saving appointment:', formattedAppointment); 
-        const response = await axios.post('https://vet-app-jb21.onrender.com/api/v1/appointments', formattedAppointment);
-        console.log('API Response:', response.data); 
-        setAppointments([...appointments, response.data]);
-        toast.success('Appointment added successfully!');
+        const animalToSave = { ...newAnimal, dateOfBirth: newAnimal.date_of_birth, customer: { id: newAnimal.customer_id } };
+        delete animalToSave.date_of_birth;
+        console.log('Saving animal:', animalToSave);
+        const response = await axios.post('https://vet-app-jb21.onrender.com/api/v1/animals', animalToSave);
+        setAnimals([...animals, response.data]);
+        toast.success('Animal added successfully!');
         handleClose();
-        fetchAppointments(); 
       } catch (error) {
-        console.error('There was an error saving the appointment:', error.response ? error.response.data : error);
-        toast.error('There was an error saving the appointment.');
+        console.error('There was an error saving the animal!', error.response ? error.response.data : error);
+        toast.error('There was an error saving the animal. ' + (error.response ? error.response.data.message : error.message));
       }
     }
   };
 
-  const handleEdit = (appointment) => {
-    const [date, time] = appointment.appointmentDate.split('T');
-    setNewAppointment({
-      id: appointment.id,
-      date: date,
-      time: time.split(':00.000Z')[0],
-      animalId: appointment.animal.id,
-      doctorId: appointment.doctor.id
-    });
-    fetchWorkDays(appointment.doctor.id);  
+  const handleEdit = (animal) => {
+    setNewAnimal({ ...animal, customer_id: animal.customer ? animal.customer.id : '' });
     setShow(true);
   };
 
   const handleUpdate = async () => {
     try {
-      const animal = animals.find(an => an.id === parseInt(newAppointment.animalId));
-      const doctor = doctors.find(doc => doc.id === parseInt(newAppointment.doctorId));
-      const appointmentDateTime = new Date(`${newAppointment.date}T${newAppointment.time}`).toISOString(); 
-      const formattedAppointment = {
-        appointmentDate: appointmentDateTime,
-        doctor: doctor,
-        animal: animal
-      };
-      const response = await axios.put(`https://vet-app-jb21.onrender.com/api/v1/appointments/${newAppointment.id}`, formattedAppointment);
-      const updatedList = appointments.map(app => app.id === newAppointment.id ? response.data : app);
-      setAppointments(updatedList);
-      toast.success('Appointment updated successfully!');
+      const animalToUpdate = { ...newAnimal, dateOfBirth: newAnimal.date_of_birth, customer: { id: newAnimal.customer_id } };
+      delete animalToUpdate.date_of_birth;
+      const response = await axios.put(`https://vet-app-jb21.onrender.com/api/v1/animals/${newAnimal.id}`, animalToUpdate);
+      const updatedList = animals.map(an => an.id === newAnimal.id ? response.data : an);
+      setAnimals(updatedList);
+      toast.success('Animal updated successfully!');
       handleClose();
-      fetchAppointments(); 
     } catch (error) {
-      toast.error('There was an error updating the appointment.');
+      console.error('Update error:', error);
+      toast.error('There was an error updating the animal.');
     }
   };
 
-  const handleDelete = async (appointmentId) => {
+  const handleDelete = async (animalId) => {
     try {
-      await axios.delete(`https://vet-app-jb21.onrender.com/api/v1/appointments/${appointmentId}`);
-      const newList = appointments.filter(appointment => appointment.id !== appointmentId);
-      setAppointments(newList);
-      toast.success('Appointment deleted successfully!');
-      fetchAppointments(); 
+      await axios.delete(`https://vet-app-jb21.onrender.com/api/v1/animals/${animalId}`);
+      const newList = animals.filter(animal => animal.id !== animalId);
+      setAnimals(newList);
+      toast.success('Animal deleted successfully!');
     } catch (error) {
-      toast.error('There was an error deleting the appointment.');
+      console.error('Delete error:', error);
+      toast.error('There was an error deleting the animal.');
     }
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setNewAppointment({ ...newAppointment, [name]: value });
-    console.log(`Changed ${name} to ${value}`);
-    if (name === 'doctorId') {
-      fetchWorkDays(value);  
-    }
+    setNewAnimal({ ...newAnimal, [name]: value });
   };
 
   return (
     <div>
-      <h1 className="mb-4">Appointments</h1>
+      <h1 className="mb-4">Animals</h1>
       <div className="d-flex flex-wrap justify-content-between mb-3 search-container">
         <div className="d-flex search-box">
           <Form.Control
-            as="select"
-            name="searchDoctorId"
-            value={searchDoctorId}
-            onChange={(e) => setSearchDoctorId(e.target.value)}
-          >
-            <option value="">Select Doctor</option>
-            {doctors.map(doctor => (
-              <option key={doctor.id} value={doctor.id}>{doctor.name}</option>
-            ))}
-          </Form.Control>
-          <Form.Control
-            type="date"
-            name="startDate"
-            value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
+            type="text"
+            placeholder="Search by animal name"
+            value={searchName}
+            onChange={(e) => setSearchName(e.target.value)}
           />
-          <Form.Control
-            type="date"
-            name="endDate"
-            value={endDate}
-            onChange={(e) => setEndDate(e.target.value)}
-          />
-          <Button onClick={() => fetchAppointmentsByDoctorAndDateRange(searchDoctorId, startDate, endDate)} className="search-button">Search</Button>
+          <Button onClick={() => fetchAnimalsByName(searchName)} className="search-button">Search</Button>
         </div>
         <div className="d-flex search-box">
           <Form.Control
-            as="select"
-            name="searchAnimalId"
-            value={searchAnimalId}
-            onChange={(e) => setSearchAnimalId(e.target.value)}
-          >
-            <option value="">Select Animal</option>
-            {animals.map(animal => (
-              <option key={animal.id} value={animal.id}>{animal.name}</option>
-            ))}
-          </Form.Control>
-          <Form.Control
-            type="date"
-            name="startDate"
-            value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
+            type="text"
+            placeholder="Search by customer name"
+            value={searchCustomer}
+            onChange={(e) => setSearchCustomer(e.target.value)}
           />
-          <Form.Control
-            type="date"
-            name="endDate"
-            value={endDate}
-            onChange={(e) => setEndDate(e.target.value)}
-          />
-          <Button onClick={() => fetchAppointmentsByAnimalAndDateRange(searchAnimalId, startDate, endDate)} className="search-button">Search</Button>
+          <Button onClick={() => fetchAnimalsByCustomer(searchCustomer)} className="search-button">Search</Button>
         </div>
       </div>
-      <Button variant="primary" onClick={handleShow}>Add Appointment</Button>
+      <Button variant="primary" onClick={handleShow}>Add Animal</Button>
       {loading ? (
         <p>Loading...</p>
       ) : (
@@ -293,27 +182,31 @@ const Appointment = () => {
           <thead>
             <tr>
               <th>ID</th>
-              <th>Date</th>
-              <th>Time</th>
-              <th>Animal Name</th>
+              <th>Name</th>
+              <th>Breed</th>
+              <th>Colour</th>
+              <th>Date of Birth</th>
+              <th>Gender</th>
+              <th>Species</th>
               <th>Customer Name</th>
-              <th>Doctor Name</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {appointments.map(appointment => (
-              <tr key={appointment.id}>
-                <td>{appointment.id}</td>
-                <td>{appointment.date}</td>
-                <td>{appointment.time}</td>
-                <td>{appointment.animalName}</td>
-                <td>{appointment.customerName}</td>
-                <td>{appointment.doctorName}</td>
+            {animals.map(animal => (
+              <tr key={animal.id}>
+                <td>{animal.id}</td>
+                <td>{animal.name}</td>
+                <td>{animal.breed}</td>
+                <td>{animal.colour}</td>
+                <td>{animal.date_of_birth}</td>
+                <td>{animal.gender}</td>
+                <td>{animal.species}</td>
+                <td>{animal.customer?.name}</td>
                 <td>
-                  <Button variant="info" onClick={() => handleEdit(appointment)}>Edit</Button>
+                  <Button variant="info" onClick={() => handleEdit(animal)}>Update</Button>
                   {' '}
-                  <Button variant="danger" onClick={() => handleDelete(appointment.id)}>Delete</Button>
+                  <Button variant="danger" onClick={() => handleDelete(animal.id)}>Delete</Button>
                 </td>
               </tr>
             ))}
@@ -323,62 +216,80 @@ const Appointment = () => {
 
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>{newAppointment.id ? 'Edit Appointment' : 'Add Appointment'}</Modal.Title>
+          <Modal.Title>{newAnimal.id ? 'Edit Animal' : 'Add Animal'}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
             <Form.Group className="mb-3">
-              <Form.Label>Doctor</Form.Label>
+              <Form.Label>Name</Form.Label>
               <Form.Control
-                as="select"
-                name="doctorId"
-                value={newAppointment.doctorId}
+                type="text"
+                placeholder="Enter name"
+                name="name"
+                value={newAnimal.name}
                 onChange={handleChange}
-              >
-                <option value="">Select Doctor</option>
-                {doctors.map(doctor => (
-                  <option key={doctor.id} value={doctor.id}>{doctor.name}</option>
-                ))}
-              </Form.Control>
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Date</Form.Label>
-              <Form.Control
-                as="select"
-                name="date"
-                value={newAppointment.date}
-                onChange={handleChange}
-                disabled={!newAppointment.doctorId}
-              >
-                <option value="">Select Date</option>
-                {workDays
-                  .filter(workDay => workDay.doctorId === parseInt(newAppointment.doctorId))
-                  .map(workDay => (
-                    <option key={workDay.id} value={workDay.workDate}>{workDay.workDate}</option>
-                  ))}
-              </Form.Control>
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Time</Form.Label>
-              <Form.Control
-                type="time"
-                name="time"
-                value={newAppointment.time}
-                onChange={handleChange}
-                disabled={!newAppointment.date}
               />
             </Form.Group>
             <Form.Group className="mb-3">
-              <Form.Label>Animal</Form.Label>
+              <Form.Label>Breed</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter breed"
+                name="breed"
+                value={newAnimal.breed}
+                onChange={handleChange}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Colour</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter colour"
+                name="colour"
+                value={newAnimal.colour}
+                onChange={handleChange}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Date of Birth</Form.Label>
+              <Form.Control
+                type="date"
+                name="date_of_birth"
+                value={newAnimal.date_of_birth}
+                onChange={handleChange}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Gender</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter gender"
+                name="gender"
+                value={newAnimal.gender}
+                onChange={handleChange}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Species</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter species"
+                name="species"
+                value={newAnimal.species}
+                onChange={handleChange}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Customer</Form.Label>
               <Form.Control
                 as="select"
-                name="animalId"
-                value={newAppointment.animalId}
+                name="customer_id"
+                value={newAnimal.customer_id}
                 onChange={handleChange}
               >
-                <option value="">Select Animal</option>
-                {animals.map(animal => (
-                  <option key={animal.id} value={animal.id}>{animal.name}</option>
+                <option value="">Select Customer</option>
+                {customers.map(customer => (
+                  <option key={customer.id} value={customer.id}>{customer.name}</option>
                 ))}
               </Form.Control>
             </Form.Group>
@@ -386,7 +297,7 @@ const Appointment = () => {
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>Close</Button>
-          <Button variant="primary" onClick={handleSave}>{newAppointment.id ? 'Update' : 'Save'}</Button>
+          <Button variant="primary" onClick={handleSave}>{newAnimal.id ? 'Update' : 'Save'}</Button>
         </Modal.Footer>
       </Modal>
 
@@ -395,4 +306,4 @@ const Appointment = () => {
   );
 };
 
-export default Appointment;
+export default Animal;
