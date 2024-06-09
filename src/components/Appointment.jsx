@@ -70,7 +70,9 @@ const Appointment = () => {
 
   const fetchWorkDays = async (doctorId) => {
     try {
-      const response = await axios.get(`https://vet-app-jb21.onrender.com/api/v1/available-dates?doctorId=${doctorId}`);
+      const response = await axios.get(`https://vet-app-jb21.onrender.com/api/v1/available-dates`, {
+        params: { doctorId: doctorId }
+      });
       const workDaysData = response.data.content.map(workDay => ({
         ...workDay,
         workDate: workDay.workDay ? new Date(workDay.workDay).toISOString().split('T')[0] : ''

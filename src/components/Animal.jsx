@@ -202,7 +202,7 @@ const Animal = () => {
                 <td>{animal.date_of_birth}</td>
                 <td>{animal.gender}</td>
                 <td>{animal.species}</td>
-                <td>{animal.customer?.name}</td>
+                <td>{animal.customer?.name || 'N/A'}</td>
                 <td>
                   <Button variant="info" onClick={() => handleEdit(animal)}>Update</Button>
                   {' '}
