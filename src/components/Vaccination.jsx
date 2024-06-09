@@ -129,9 +129,9 @@ const Vaccine = () => {
     const animal = animals.find(an => an.id === parseInt(newVaccine.animalWithoutCustomer.id));
     const formattedVaccine = {
       ...newVaccine,
-      animalWithoutCustomer: animal
+      animalWithoutCustomer: animal ? { id: animal.id, name: animal.name } : null
     };
-
+  
     if (newVaccine.id) {
       handleUpdate(formattedVaccine);
     } else {
@@ -147,6 +147,7 @@ const Vaccine = () => {
       }
     }
   };
+  
 
   const handleEdit = (vaccine) => {
     const animal = animals.find(an => an.id === vaccine.animalWithoutCustomer.id) || {};
