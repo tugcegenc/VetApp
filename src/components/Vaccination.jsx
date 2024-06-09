@@ -129,9 +129,9 @@ const Vaccine = () => {
     const animal = animals.find(an => an.id === parseInt(newVaccine.animalWithoutCustomer.id));
     const formattedVaccine = {
       ...newVaccine,
-      animalWithoutCustomer: animal ? { id: animal.id, name: animal.name } : null
+      animalWithoutCustomer: animal ? { id: animal.id, name: animal.name } : {}
     };
-  
+
     if (newVaccine.id) {
       handleUpdate(formattedVaccine);
     } else {
@@ -141,13 +141,13 @@ const Vaccine = () => {
         setVaccines([...vaccines, response.data]);
         toast.success('Vaccine added successfully!');
         handleClose();
+        fetchVaccines(); // Veri kaydedildikten sonra verileri tekrar çek
       } catch (error) {
         console.error('There was an error saving the vaccine!', error.response ? error.response.data : error);
         toast.error('There was an error saving the vaccine. ' + (error.response ? error.response.data.message : error.message));
       }
     }
   };
-  
 
   const handleEdit = (vaccine) => {
     const animal = animals.find(an => an.id === vaccine.animalWithoutCustomer.id) || {};
@@ -273,7 +273,7 @@ const Vaccine = () => {
                 <td>{vaccine.protectionFinishDate}</td>
                 <td>{vaccine.animalWithoutCustomer?.name || 'N/A'}</td>
                 <td>
-                  <Button variant="info" onClick={() => handleEdit(vaccine)}>Update</Button>
+                  <Button variant="info" onClick={() => handleEdit(vaccine)}>Edit</Button>
                   {' '}
                   <Button variant="danger" onClick={() => handleDelete(vaccine.id)}>Delete</Button>
                 </td>

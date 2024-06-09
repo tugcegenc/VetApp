@@ -63,6 +63,7 @@ const Report = () => {
         setReports([...reports, response.data]);
         toast.success('Report added successfully!');
         handleClose();
+        fetchReports(); // Veri kaydedildikten sonra verileri tekrar çek
       } catch (error) {
         console.error('There was an error saving the report!', error.response ? error.response.data : error);
         toast.error('There was an error saving the report. ' + (error.response ? error.response.data.message : error.message));
@@ -136,7 +137,7 @@ const Report = () => {
                   <td>{report.title}</td>
                   <td>{report.diagnosis}</td>
                   <td>{report.price}</td>
-                  <td>{appointment ? appointment.appointmentDate : 'N/A'}</td>
+                  <td>{appointment ? new Date(appointment.appointmentDate).toLocaleDateString() : 'N/A'}</td>
                   <td>{appointment && appointment.doctor ? appointment.doctor.name : 'N/A'}</td>
                   <td>{appointment && appointment.animal ? appointment.animal.name : 'N/A'}</td>
                   <td>{appointment && appointment.animal && appointment.animal.customer ? appointment.animal.customer.name : 'N/A'}</td>
@@ -198,7 +199,7 @@ const Report = () => {
               >
                 <option value="">Select Appointment</option>
                 {appointments.map(appointment => (
-                  <option key={appointment.id} value={appointment.id}>{appointment.appointmentDate}</option>
+                  <option key={appointment.id} value={appointment.id}>{new Date(appointment.appointmentDate).toLocaleDateString()}</option>
                 ))}
               </Form.Control>
             </Form.Group>
