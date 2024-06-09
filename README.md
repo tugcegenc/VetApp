@@ -49,7 +49,7 @@ Bu, full-stack bir Veteriner Yönetim Uygulamasıdır. Uygulama, bir backend API
 - Node.js ve npm yüklü
 - Java JDK yüklü
 - Maven yüklü
-- MySQL veritabanı çalışır durumda
+- PostgreSQL veritabanı çalışır durumda
 
 ### Backend
 

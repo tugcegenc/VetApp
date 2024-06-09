@@ -50,7 +50,7 @@ const Appointment = () => {
 
   const fetchAnimals = async () => {
     try {
-      const response = await axios.get('https://vet-app-jb21.onrender.com/v1/animals');
+      const response = await axios.get('https://vet-app-jb21.onrender.com/api/v1/animals');
       const animalsData = response.data.content;
       setAnimals(Array.isArray(animalsData) ? animalsData : []);
     } catch (error) {
@@ -311,7 +311,7 @@ const Appointment = () => {
                 <td>{appointment.customerName}</td>
                 <td>{appointment.doctorName}</td>
                 <td>
-                  <Button variant="info" onClick={() => handleEdit(appointment)}>Update</Button>
+                  <Button variant="info" onClick={() => handleEdit(appointment)}>Edit</Button>
                   {' '}
                   <Button variant="danger" onClick={() => handleDelete(appointment.id)}>Delete</Button>
                 </td>
@@ -352,7 +352,7 @@ const Appointment = () => {
               >
                 <option value="">Select Date</option>
                 {workDays
-                  .filter(workDay => workDay.doctor.id === parseInt(newAppointment.doctorId))
+                  .filter(workDay => workDay.doctorId === parseInt(newAppointment.doctorId))
                   .map(workDay => (
                     <option key={workDay.id} value={workDay.workDay}>{workDay.workDay}</option>
                   ))}
