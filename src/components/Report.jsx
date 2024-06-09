@@ -38,6 +38,7 @@ const Report = () => {
       const appointmentsData = response.data.content.map(appointment => ({
         ...appointment,
         date: appointment.appointmentDate ? new Date(appointment.appointmentDate).toLocaleDateString() : '',
+        time: appointment.appointmentDate ? new Date(appointment.appointmentDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '',
         doctorName: appointment.doctor ? appointment.doctor.name : 'N/A',
         animalName: appointment.animal ? appointment.animal.name : 'N/A',
         customerName: appointment.animal && appointment.animal.customer ? appointment.animal.customer.name : 'N/A'
@@ -127,6 +128,7 @@ const Report = () => {
               <th>Diagnosis</th>
               <th>Price</th>
               <th>Appointment Date</th>
+              <th>Appointment Time</th>
               <th>Doctor Name</th>
               <th>Animal Name</th>
               <th>Customer Name</th>
@@ -143,6 +145,7 @@ const Report = () => {
                   <td>{report.diagnosis}</td>
                   <td>{report.price}</td>
                   <td>{appointment ? appointment.date : 'N/A'}</td>
+                  <td>{appointment ? appointment.time : 'N/A'}</td>
                   <td>{appointment ? appointment.doctorName : 'N/A'}</td>
                   <td>{appointment ? appointment.animalName : 'N/A'}</td>
                   <td>{appointment ? appointment.customerName : 'N/A'}</td>
@@ -204,7 +207,7 @@ const Report = () => {
               >
                 <option value="">Select Appointment</option>
                 {appointments.map(appointment => (
-                  <option key={appointment.id} value={appointment.id}>{appointment.date}</option>
+                  <option key={appointment.id} value={appointment.id}>{appointment.date} {appointment.time}</option>
                 ))}
               </Form.Control>
             </Form.Group>
