@@ -5,7 +5,7 @@ Bu, full-stack bir Veteriner Yönetim Uygulamasıdır. Uygulama, bir backend API
 ## Canlı Demo
 
 - **Backend**: [Vet App Backend](https://vet-app-jb21.onrender.com)
-- **Frontend**: [Vet App Frontend](https://illustrious-sprite-fc0fa6.netlify.app/)
+- **Frontend**: [Vet App Frontend]()
 
 ## Özellikler
 

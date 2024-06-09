@@ -126,7 +126,7 @@ const Vaccine = () => {
         setVaccines([...vaccines, response.data]);
         toast.success('Vaccine added successfully!');
         handleClose();
-        fetchVaccines(); // Veri kaydedildikten sonra verileri tekrar çek
+        fetchVaccines(); 
       } catch (error) {
         console.error('There was an error saving the vaccine!', error.response ? error.response.data : error);
         toast.error('There was an error saving the vaccine. ' + (error.response ? error.response.data.message : error.message));
