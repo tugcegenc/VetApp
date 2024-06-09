@@ -73,7 +73,7 @@ const Appointment = () => {
       const response = await axios.get(`https://vet-app-jb21.onrender.com/api/v1/available-dates?doctorId=${doctorId}`);
       const workDaysData = response.data.content.map(workDay => ({
         ...workDay,
-        workDate: workDay.workDate ? new Date(workDay.workDate).toISOString().split('T')[0] : ''
+        workDate: workDay.workDay ? new Date(workDay.workDay).toISOString().split('T')[0] : ''
       }));
       setWorkDays(Array.isArray(workDaysData) ? workDaysData : []);
       console.log('Work Days:', workDaysData);
@@ -352,9 +352,9 @@ const Appointment = () => {
               >
                 <option value="">Select Date</option>
                 {workDays
-                  .filter(workDay => workDay.doctorId === parseInt(newAppointment.doctorId))
+                  .filter(workDay => workDay.doctor.id === parseInt(newAppointment.doctorId))
                   .map(workDay => (
-                    <option key={workDay.id} value={workDay.workDate}>{workDay.workDate}</option>
+                    <option key={workDay.id} value={workDay.workDay}>{workDay.workDay}</option>
                   ))}
               </Form.Control>
             </Form.Group>
