@@ -72,7 +72,7 @@ const Report = () => {
         fetchReports(); // Veri kaydedildikten sonra verileri tekrar çek
       } catch (error) {
         console.error('There was an error saving the report!', error.response ? error.response.data : error);
-        toast.error('There was an error saving the report. ' + (error.response ? error.response.data.message : error.message));
+        toast.error('There was an error saving the report ' + (error.response ? error.response.data.message : error.message));
       }
     }
   };
