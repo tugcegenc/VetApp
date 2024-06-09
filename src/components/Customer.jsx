@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Table, Button, Modal, Form } from 'react-bootstrap';
+import { Table, Button, Modal, Form, Row, Col } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import '../App.css';
 
 const Customer = () => {
   const [customers, setCustomers] = useState([]);
@@ -108,18 +108,22 @@ const Customer = () => {
   return (
     <div>
       <h1 className="mb-4">Customers</h1>
-      <div className="d-flex justify-content-between mb-3 search-container">
-        <div className="d-flex search-box">
-          <Form.Control
-            type="text"
-            placeholder="Search by customer name"
-            value={searchName}
-            onChange={(e) => setSearchName(e.target.value)}
-          />
-          <Button onClick={() => fetchCustomersByName(searchName)} className="search-button">Search</Button>
-        </div>
-      </div>
-      <Button variant="primary" onClick={handleShow} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Add Customer</Button>
+      <Form inline className="mb-3">
+        <Form.Group as={Row} className="align-items-center">
+          <Col xs="auto">
+            <Form.Control
+              type="text"
+              placeholder="Search by customer name"
+              value={searchName}
+              onChange={(e) => setSearchName(e.target.value)}
+            />
+          </Col>
+          <Col xs="auto">
+            <Button onClick={() => fetchCustomersByName(searchName)} className="search-button">Search</Button>
+          </Col>
+        </Form.Group>
+      </Form>
+      <Button variant="primary" onClick={handleShow}>Add Customer</Button>
       {loading ? (
         <p>Loading...</p>
       ) : (
@@ -145,9 +149,9 @@ const Customer = () => {
                 <td>{customer.address}</td>
                 <td>{customer.email}</td>
                 <td>
-                  <Button variant="primary" onClick={() => handleEdit(customer)} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Update</Button>
+                  <Button variant="info" onClick={() => handleEdit(customer)}>Update</Button>
                   {' '}
-                  <Button variant="primary" onClick={() => handleDelete(customer.id)} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Delete</Button>
+                  <Button variant="danger" onClick={() => handleDelete(customer.id)}>Delete</Button>
                 </td>
               </tr>
             ))}

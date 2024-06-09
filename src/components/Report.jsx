@@ -108,7 +108,7 @@ const Report = () => {
   return (
     <div>
       <h1 className="mb-4">Reports</h1>
-      <Button variant="primary" onClick={handleShow} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Add Report</Button>
+      <Button variant="primary" onClick={handleShow}>Add Report</Button>
       {loading ? (
         <p>Loading...</p>
       ) : (
@@ -120,7 +120,6 @@ const Report = () => {
               <th>Diagnosis</th>
               <th>Price</th>
               <th>Appointment Date</th>
-              <th>Appointment Time</th>
               <th>Doctor Name</th>
               <th>Animal Name</th>
               <th>Customer Name</th>
@@ -129,22 +128,22 @@ const Report = () => {
           </thead>
           <tbody>
             {reports.map(report => {
-              const appointment = report.appointment; 
+              const appointment = appointments.find(app => app.id === report.appointmentId);
+              console.log('Appointment:', appointment); 
               return (
                 <tr key={report.id}>
                   <td>{report.id}</td>
                   <td>{report.title}</td>
                   <td>{report.diagnosis}</td>
                   <td>{report.price}</td>
-                  <td>{appointment ? new Date(appointment.date).toLocaleDateString() : 'N/A'}</td>
-                  <td>{appointment ? new Date(appointment.date).toLocaleTimeString() : 'N/A'}</td>
-                  <td>{appointment ? appointment.doctorName : 'N/A'}</td>
-                  <td>{appointment ? appointment.animalName : 'N/A'}</td>
-                  <td>{appointment ? appointment.customerName : 'N/A'}</td>
+                  <td>{appointment ? appointment.appointmentDate : 'N/A'}</td>
+                  <td>{appointment && appointment.doctor ? appointment.doctor.name : 'N/A'}</td>
+                  <td>{appointment && appointment.animal ? appointment.animal.name : 'N/A'}</td>
+                  <td>{appointment && appointment.animal && appointment.animal.customer ? appointment.animal.customer.name : 'N/A'}</td>
                   <td>
-                    <Button variant="primary" onClick={() => handleEdit(report)} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Update</Button>
+                    <Button variant="info" onClick={() => handleEdit(report)}>Update</Button>
                     {' '}
-                    <Button variant="primary" onClick={() => handleDelete(report.id)} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Delete</Button>
+                    <Button variant="danger" onClick={() => handleDelete(report.id)}>Delete</Button>
                   </td>
                 </tr>
               );
@@ -199,7 +198,7 @@ const Report = () => {
               >
                 <option value="">Select Appointment</option>
                 {appointments.map(appointment => (
-                  <option key={appointment.id} value={appointment.id}>{new Date(appointment.appointmentDate).toLocaleString()}</option>
+                  <option key={appointment.id} value={appointment.id}>{appointment.appointmentDate}</option>
                 ))}
               </Form.Control>
             </Form.Group>

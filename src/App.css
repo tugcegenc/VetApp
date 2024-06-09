@@ -24,12 +24,8 @@ h1 {
   margin-bottom: 20px;
 }
 
-.carousel img {
-  height: 400px;
-  object-fit: cover;
-}
 .navbar-light {
-  background-color: #F5F5F5; 
+  background-color: #0050a0; 
 }
 
 .nav-link {
@@ -41,27 +37,11 @@ h1 {
 }
 
 .bg-custom {
-  background-color: #E8EAF6!important;
-}
- .footer {
-  background-color: #F5F5F5; 
-  color: #333; 
-  border-top: 1px solid #E7E7E7; 
+  background-color: #0090e4!important;
 }
 
-.footer a {
-  color: #2196F3; 
-}
-
-.footer a:hover {
-  color: #4CAF50; 
-}
 .custom-navbar {
-  background-color: #a4c2a8 !important;
-}
-.animal-container{
-  background-color: #E4F5E5;
-  min-height: 100vh
+  background-color: #0090e4 !important;
 }
 
 .custom-button-primary {
@@ -69,3 +49,23 @@ h1 {
   border-color: #4CAF50;
   color: #333;
 }
+.search-container {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+
+.search-container {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.search-button {
+  padding: 5px 10px;
+  font-size: 14px;
+  margin-left: 10px;
+  white-space: nowrap;
+}
+

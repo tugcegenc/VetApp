@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Table, Button, Modal, Form } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import '../App.css';
 
 const Animal = () => {
   const [animals, setAnimals] = useState([]);
@@ -11,7 +12,7 @@ const Animal = () => {
   const [newAnimal, setNewAnimal] = useState({ id: null, name: '', breed: '', colour: '', date_of_birth: '', gender: '', species: '', customer_id: '' });
   const [loading, setLoading] = useState(false);
   const [searchName, setSearchName] = useState('');
-  const [searchCustomerName, setSearchCustomerName] = useState('');
+  const [searchCustomer, setSearchCustomer] = useState('');
 
   useEffect(() => {
     fetchAnimals();
@@ -71,7 +72,7 @@ const Animal = () => {
   const fetchAnimalsByCustomer = async (customerName) => {
     setLoading(true);
     try {
-      const response = await axios.get('hhttps://vet-app-jb21.onrender.com/api/v1/animals/searchByCustomer', {
+      const response = await axios.get('https://vet-app-jb21.onrender.com/api/v1/animals/searchByCustomer', {
         params: { customerName }
       });
       console.log('Animals by Customer API Response:', response.data);
@@ -81,8 +82,8 @@ const Animal = () => {
       }));
       setAnimals(Array.isArray(animalsData) ? animalsData : []);
     } catch (error) {
-      console.error('There was an error fetching the animals by customer!', error);
-      toast.error('There was an error fetching the animals by customer.');
+      console.error('There was an error fetching the animals by customer name!', error);
+      toast.error('There was an error fetching the animals by customer name.');
     } finally {
       setLoading(false);
     }
@@ -106,7 +107,6 @@ const Animal = () => {
         setAnimals([...animals, response.data]);
         toast.success('Animal added successfully!');
         handleClose();
-        fetchAnimals();
       } catch (error) {
         console.error('There was an error saving the animal!', error.response ? error.response.data : error);
         toast.error('There was an error saving the animal. ' + (error.response ? error.response.data.message : error.message));
@@ -128,7 +128,6 @@ const Animal = () => {
       setAnimals(updatedList);
       toast.success('Animal updated successfully!');
       handleClose();
-      fetchAnimals();
     } catch (error) {
       console.error('Update error:', error);
       toast.error('There was an error updating the animal.');
@@ -155,29 +154,27 @@ const Animal = () => {
   return (
     <div>
       <h1 className="mb-4">Animals</h1>
-      <div className="d-flex mb-3">
-        <Form.Control
-          type="text"
-          placeholder="Search by animal name"
-          value={searchName}
-          onChange={(e) => setSearchName(e.target.value)}
-          style={{ marginRight: '10px' }}
-        />
-        <Button onClick={() => fetchAnimalsByName(searchName)} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500', marginRight: '10px' }}>
-          Search
-        </Button>
-        <Form.Control
-          type="text"
-          placeholder="Search by customer name"
-          value={searchCustomerName}
-          onChange={(e) => setSearchCustomerName(e.target.value)}
-          style={{ marginRight: '10px' }}
-        />
-        <Button onClick={() => fetchAnimalsByCustomer(searchCustomerName)} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>
-          Search
-        </Button>
+      <div className="d-flex flex-wrap justify-content-between mb-3 search-container">
+        <div className="d-flex search-box">
+          <Form.Control
+            type="text"
+            placeholder="Search by animal name"
+            value={searchName}
+            onChange={(e) => setSearchName(e.target.value)}
+          />
+          <Button onClick={() => fetchAnimalsByName(searchName)} className="search-button">Search</Button>
+        </div>
+        <div className="d-flex search-box">
+          <Form.Control
+            type="text"
+            placeholder="Search by customer name"
+            value={searchCustomer}
+            onChange={(e) => setSearchCustomer(e.target.value)}
+          />
+          <Button onClick={() => fetchAnimalsByCustomer(searchCustomer)} className="search-button">Search</Button>
+        </div>
       </div>
-      <Button variant="primary" onClick={handleShow} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Add Animal</Button>
+      <Button variant="primary" onClick={handleShow}>Add Animal</Button>
       {loading ? (
         <p>Loading...</p>
       ) : (
@@ -207,9 +204,9 @@ const Animal = () => {
                 <td>{animal.species}</td>
                 <td>{animal.customer?.name}</td>
                 <td>
-                  <Button variant="primary" onClick={() => handleEdit(animal)} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Update</Button>
+                  <Button variant="info" onClick={() => handleEdit(animal)}>Update</Button>
                   {' '}
-                  <Button variant="primary" onClick={() => handleDelete(animal.id)} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Delete</Button>
+                  <Button variant="danger" onClick={() => handleDelete(animal.id)}>Delete</Button>
                 </td>
               </tr>
             ))}

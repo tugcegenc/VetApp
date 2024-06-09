@@ -14,12 +14,20 @@ const Vaccine = () => {
     code: '',
     protectionStartDate: '',
     protectionFinishDate: '',
-    animal: {
+    animalWithoutCustomer: {
       id: '',
-      name: ''
+      name: '',
+      species: '',
+      breed: '',
+      gender: '',
+      dateOfBirth: '',
+      colour: ''
     }
   });
   const [loading, setLoading] = useState(false);
+  const [searchAnimalId, setSearchAnimalId] = useState('');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
 
   useEffect(() => {
     fetchVaccines();
@@ -33,7 +41,8 @@ const Vaccine = () => {
       const vaccinesData = response.data.content.map(vaccine => ({
         ...vaccine,
         protectionStartDate: vaccine.protectionStartDate ? new Date(vaccine.protectionStartDate).toISOString().split('T')[0] : '',
-        protectionFinishDate: vaccine.protectionFinishDate ? new Date(vaccine.protectionFinishDate).toISOString().split('T')[0] : ''
+        protectionFinishDate: vaccine.protectionFinishDate ? new Date(vaccine.protectionFinishDate).toISOString().split('T')[0] : '',
+        animalWithoutCustomer: vaccine.animalWithoutCustomer || { id: '', name: '' }
       }));
       setVaccines(Array.isArray(vaccinesData) ? vaccinesData : []);
     } catch (error) {
@@ -55,6 +64,46 @@ const Vaccine = () => {
     }
   };
 
+  const fetchVaccinesByAnimal = async (animalId) => {
+    setLoading(true);
+    try {
+      const response = await axios.get('https://vet-app-jb21.onrender.com/api/v1/vaccinations/searchByAnimal', {
+        params: { id: animalId }
+      });
+      const vaccinesData = response.data.content.map(vaccine => ({
+        ...vaccine,
+        protectionStartDate: vaccine.protectionStartDate ? new Date(vaccine.protectionStartDate).toISOString().split('T')[0] : '',
+        protectionFinishDate: vaccine.protectionFinishDate ? new Date(vaccine.protectionFinishDate).toISOString().split('T')[0] : '',
+        animalWithoutCustomer: vaccine.animalWithoutCustomer || { id: '', name: '' }
+      }));
+      setVaccines(Array.isArray(vaccinesData) ? vaccinesData : []);
+    } catch (error) {
+      toast.error('There was an error fetching the vaccines by animal.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchVaccinesByDateRange = async (startDate, endDate) => {
+    setLoading(true);
+    try {
+      const response = await axios.get('https://vet-app-jb21.onrender.com/api/v1/vaccinations/searchByVaccinationRange', {
+        params: { startDate, endDate }
+      });
+      const vaccinesData = response.data.content.map(vaccine => ({
+        ...vaccine,
+        protectionStartDate: vaccine.protectionStartDate ? new Date(vaccine.protectionStartDate).toISOString().split('T')[0] : '',
+        protectionFinishDate: vaccine.protectionFinishDate ? new Date(vaccine.protectionFinishDate).toISOString().split('T')[0] : '',
+        animalWithoutCustomer: vaccine.animalWithoutCustomer || { id: '', name: '' }
+      }));
+      setVaccines(Array.isArray(vaccinesData) ? vaccinesData : []);
+    } catch (error) {
+      toast.error('There was an error fetching the vaccines by date range.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleShow = () => setShow(true);
   const handleClose = () => {
     setNewVaccine({
@@ -63,20 +112,32 @@ const Vaccine = () => {
       code: '',
       protectionStartDate: '',
       protectionFinishDate: '',
-      animal: {
+      animalWithoutCustomer: {
         id: '',
-        name: ''
+        name: '',
+        species: '',
+        breed: '',
+        gender: '',
+        dateOfBirth: '',
+        colour: ''
       }
     });
     setShow(false);
   };
 
   const handleSave = async () => {
+    const animal = animals.find(an => an.id === parseInt(newVaccine.animalWithoutCustomer.id));
+    const formattedVaccine = {
+      ...newVaccine,
+      animalWithoutCustomer: animal
+    };
+
     if (newVaccine.id) {
-      handleUpdate();
+      handleUpdate(formattedVaccine);
     } else {
       try {
-        const response = await axios.post('https://vet-app-jb21.onrender.com/api/v1/vaccinations', newVaccine);
+        console.log('Saving vaccine:', formattedVaccine);
+        const response = await axios.post('https://vet-app-jb21.onrender.com/api/v1/vaccinations', formattedVaccine);
         setVaccines([...vaccines, response.data]);
         toast.success('Vaccine added successfully!');
         handleClose();
@@ -88,13 +149,29 @@ const Vaccine = () => {
   };
 
   const handleEdit = (vaccine) => {
-    setNewVaccine(vaccine);
+    const animal = animals.find(an => an.id === vaccine.animalWithoutCustomer.id) || {};
+    setNewVaccine({
+      id: vaccine.id,
+      name: vaccine.name,
+      code: vaccine.code,
+      protectionStartDate: vaccine.protectionStartDate,
+      protectionFinishDate: vaccine.protectionFinishDate,
+      animalWithoutCustomer: {
+        id: animal.id || '',
+        name: animal.name || '',
+        species: animal.species || '',
+        breed: animal.breed || '',
+        gender: animal.gender || '',
+        dateOfBirth: animal.dateOfBirth || '',
+        colour: animal.colour || ''
+      }
+    });
     setShow(true);
   };
 
-  const handleUpdate = async () => {
+  const handleUpdate = async (formattedVaccine) => {
     try {
-      const response = await axios.put(`https://vet-app-jb21.onrender.com/api/v1/vaccinations/${newVaccine.id}`, newVaccine);
+      const response = await axios.put(`https://vet-app-jb21.onrender.com/api/v1/vaccinations/${newVaccine.id}`, formattedVaccine);
       const updatedList = vaccines.map(vac => vac.id === newVaccine.id ? response.data : vac);
       setVaccines(updatedList);
       toast.success('Vaccine updated successfully!');
@@ -119,9 +196,15 @@ const Vaccine = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (name === "animal") {
-      const selectedAnimal = animals.find(animal => animal.id === parseInt(value));
-      setNewVaccine({ ...newVaccine, animal: selectedAnimal });
+    if (name.startsWith('animalWithoutCustomer')) {
+      const field = name.split('.')[1];
+      setNewVaccine({
+        ...newVaccine,
+        animalWithoutCustomer: {
+          ...newVaccine.animalWithoutCustomer,
+          [field]: value
+        }
+      });
     } else {
       setNewVaccine({ ...newVaccine, [name]: value });
     }
@@ -130,7 +213,40 @@ const Vaccine = () => {
   return (
     <div>
       <h1 className="mb-4">Vaccines</h1>
-      <Button variant="primary" onClick={handleShow} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Add Vaccine</Button>
+      
+      <div className="d-flex flex-wrap justify-content-between mb-3 search-container">
+        <div className="d-flex search-box">
+          <Form.Control
+            as="select"
+            name="searchAnimalId"
+            value={searchAnimalId}
+            onChange={(e) => setSearchAnimalId(e.target.value)}
+          >
+            <option value="">Select Animal</option>
+            {animals.map(animal => (
+              <option key={animal.id} value={animal.id}>{animal.name}</option>
+            ))}
+          </Form.Control>
+          <Button onClick={() => fetchVaccinesByAnimal(searchAnimalId)} className="search-button">Search</Button>
+        </div>
+        <div className="d-flex search-box">
+          <Form.Control
+            type="date"
+            name="startDate"
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+          />
+          <Form.Control
+            type="date"
+            name="endDate"
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
+          />
+          <Button onClick={() => fetchVaccinesByDateRange(startDate, endDate)} className="search-button">Search</Button>
+        </div>
+      </div>
+
+      <Button variant="primary" onClick={handleShow}>Add Vaccine</Button>
       {loading ? (
         <p>Loading...</p>
       ) : (
@@ -154,11 +270,11 @@ const Vaccine = () => {
                 <td>{vaccine.code}</td>
                 <td>{vaccine.protectionStartDate}</td>
                 <td>{vaccine.protectionFinishDate}</td>
-                <td>{vaccine.animal?.name || 'N/A'}</td>
+                <td>{vaccine.animalWithoutCustomer?.name || 'N/A'}</td>
                 <td>
-                  <Button variant="primary" onClick={() => handleEdit(vaccine)} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Update</Button>
+                  <Button variant="info" onClick={() => handleEdit(vaccine)}>Update</Button>
                   {' '}
-                  <Button variant="primary" onClick={() => handleDelete(vaccine.id)} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Delete</Button>
+                  <Button variant="danger" onClick={() => handleDelete(vaccine.id)}>Delete</Button>
                 </td>
               </tr>
             ))}
@@ -214,8 +330,8 @@ const Vaccine = () => {
               <Form.Label>Animal</Form.Label>
               <Form.Control
                 as="select"
-                name="animal"
-                value={newVaccine.animal.id}
+                name="animalWithoutCustomer.id"
+                value={newVaccine.animalWithoutCustomer.id}
                 onChange={handleChange}
               >
                 <option value="">Select Animal</option>

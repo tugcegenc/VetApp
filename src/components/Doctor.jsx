@@ -26,7 +26,7 @@ const Doctor = () => {
       const response = await axios.get('https://vet-app-jb21.onrender.com/api/v1/doctors');
       const doctorsData = response.data.content;
       setDoctors(Array.isArray(doctorsData) ? doctorsData : []);
-      fetchWorkDays(); // fetchWorkDays fonksiyonunu burada çağırıyoruz ve doctorsData'yı parametre olarak geçiyoruz
+      fetchWorkDays(); 
     } catch (error) {
       toast.error('There was an error fetching the doctors.');
     } finally {
@@ -72,7 +72,7 @@ const Doctor = () => {
         setDoctors([...doctors, response.data]);
         toast.success('Doctor added successfully!');
         handleCloseDoctorModal();
-        fetchDoctors();
+        fetchDoctors(); 
       } catch (error) {
         toast.error('There was an error saving the doctor.');
       }
@@ -91,7 +91,7 @@ const Doctor = () => {
       setDoctors(updatedList);
       toast.success('Doctor updated successfully!');
       handleCloseDoctorModal();
-      fetchDoctors();
+      fetchDoctors(); 
     } catch (error) {
       toast.error('There was an error updating the doctor.');
     }
@@ -168,7 +168,7 @@ const Doctor = () => {
   return (
     <div>
       <h1 className="mb-4">Doctors</h1>
-      <Button variant="primary" onClick={handleShowDoctorModal} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Add Doctor</Button>
+      <Button variant="primary" onClick={handleShowDoctorModal}>Add Doctor</Button>
       {loading ? (
         <p>Loading...</p>
       ) : (
@@ -195,9 +195,9 @@ const Doctor = () => {
                   <td>{doctor.address}</td>
                   <td>{doctor.email}</td>
                   <td>
-                    <Button variant="primary" onClick={() => handleEditDoctor(doctor)} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Update</Button>
+                    <Button variant="info" onClick={() => handleEditDoctor(doctor)}>Update</Button>
                     {' '}
-                    <Button variant="primary" onClick={() => handleDeleteDoctor(doctor.id)} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Delete</Button>
+                    <Button variant="danger" onClick={() => handleDeleteDoctor(doctor.id)}>Delete</Button>
                   </td>
                 </tr>
               ))}
@@ -205,7 +205,7 @@ const Doctor = () => {
           </Table>
 
           <h2 className="mt-4">Work Days</h2>
-          <Button variant="primary" onClick={handleShowWorkDayModal} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Add Work Day</Button>
+          <Button variant="primary" onClick={handleShowWorkDayModal}>Add Work Day</Button>
           <Table striped bordered hover className="mt-3">
             <thead>
               <tr>
@@ -222,9 +222,9 @@ const Doctor = () => {
                   <td>{workDay.doctorName}</td>
                   <td>{workDay.workDate}</td>
                   <td>
-                    <Button variant="primary" onClick={() => handleEditWorkDay(workDay)} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Update</Button>
+                    <Button variant="info" onClick={() => handleEditWorkDay(workDay)}>Update</Button>
                     {' '}
-                    <Button variant="primary" onClick={() => handleDeleteWorkDay(workDay.id)} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Delete</Button>
+                    <Button variant="danger" onClick={() => handleDeleteWorkDay(workDay.id)}>Delete</Button>
                   </td>
                 </tr>
               ))}

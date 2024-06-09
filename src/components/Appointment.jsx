@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Table, Button, Modal, Form } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import '../App.css';
 
 const Appointment = () => {
   const [appointments, setAppointments] = useState([]);
@@ -12,6 +13,10 @@ const Appointment = () => {
   const [newAppointment, setNewAppointment] = useState({ id: null, date: '', time: '', animalId: '', doctorId: '' });
   const [workDays, setWorkDays] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [searchDoctorId, setSearchDoctorId] = useState('');
+  const [searchAnimalId, setSearchAnimalId] = useState('');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
 
   useEffect(() => {
     fetchAppointments();
@@ -45,7 +50,7 @@ const Appointment = () => {
 
   const fetchAnimals = async () => {
     try {
-      const response = await axios.get('https://vet-app-jb21.onrender.com/api/v1/animals');
+      const response = await axios.get('https://vet-app-jb21.onrender.com/v1/animals');
       const animalsData = response.data.content;
       setAnimals(Array.isArray(animalsData) ? animalsData : []);
     } catch (error) {
@@ -71,10 +76,62 @@ const Appointment = () => {
         workDate: workDay.workDay ? new Date(workDay.workDay).toISOString().split('T')[0] : ''
       }));
       setWorkDays(Array.isArray(workDaysData) ? workDaysData : []);
-      console.log('Work Days:', workDaysData); 
+      console.log('Work Days:', workDaysData);
     } catch (error) {
       console.error('There was an error fetching the work days:', error);
       toast.error('There was an error fetching the work days.');
+    }
+  };
+
+  const fetchAppointmentsByDoctorAndDateRange = async (doctorId, startDate, endDate) => {
+    setLoading(true);
+    try {
+      const response = await axios.get('https://vet-app-jb21.onrender.com/api/v1/appointments/searchByDoctorAndDateRange', {
+        params: { id: doctorId, startDate, endDate }
+      });
+      const appointmentsData = response.data.content.map(appointment => {
+        const localDate = new Date(appointment.appointmentDate).toLocaleDateString();
+        const localTime = new Date(appointment.appointmentDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        return {
+          ...appointment,
+          date: localDate,
+          time: localTime,
+          animalName: appointment.animal?.name || '',
+          customerName: appointment.animal?.customer?.name || '',
+          doctorName: appointment.doctor?.name || ''
+        };
+      });
+      setAppointments(Array.isArray(appointmentsData) ? appointmentsData : []);
+    } catch (error) {
+      toast.error('There was an error fetching the appointments by doctor and date range.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchAppointmentsByAnimalAndDateRange = async (animalId, startDate, endDate) => {
+    setLoading(true);
+    try {
+      const response = await axios.get('https://vet-app-jb21.onrender.com/api/v1/appointments/searchByAnimalAndDateRange', {
+        params: { id: animalId, startDate, endDate }
+      });
+      const appointmentsData = response.data.content.map(appointment => {
+        const localDate = new Date(appointment.appointmentDate).toLocaleDateString();
+        const localTime = new Date(appointment.appointmentDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        return {
+          ...appointment,
+          date: localDate,
+          time: localTime,
+          animalName: appointment.animal?.name || '',
+          customerName: appointment.animal?.customer?.name || '',
+          doctorName: appointment.doctor?.name || ''
+        };
+      });
+      setAppointments(Array.isArray(appointmentsData) ? appointmentsData : []);
+    } catch (error) {
+      toast.error('There was an error fetching the appointments by animal and date range.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -174,7 +231,61 @@ const Appointment = () => {
   return (
     <div>
       <h1 className="mb-4">Appointments</h1>
-      <Button variant="primary" onClick={handleShow} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Add Appointment</Button>
+      <div className="d-flex flex-wrap justify-content-between mb-3 search-container">
+        <div className="d-flex search-box">
+          <Form.Control
+            as="select"
+            name="searchDoctorId"
+            value={searchDoctorId}
+            onChange={(e) => setSearchDoctorId(e.target.value)}
+          >
+            <option value="">Select Doctor</option>
+            {doctors.map(doctor => (
+              <option key={doctor.id} value={doctor.id}>{doctor.name}</option>
+            ))}
+          </Form.Control>
+          <Form.Control
+            type="date"
+            name="startDate"
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+          />
+          <Form.Control
+            type="date"
+            name="endDate"
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
+          />
+          <Button onClick={() => fetchAppointmentsByDoctorAndDateRange(searchDoctorId, startDate, endDate)} className="search-button">Search</Button>
+        </div>
+        <div className="d-flex search-box">
+          <Form.Control
+            as="select"
+            name="searchAnimalId"
+            value={searchAnimalId}
+            onChange={(e) => setSearchAnimalId(e.target.value)}
+          >
+            <option value="">Select Animal</option>
+            {animals.map(animal => (
+              <option key={animal.id} value={animal.id}>{animal.name}</option>
+            ))}
+          </Form.Control>
+          <Form.Control
+            type="date"
+            name="startDate"
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+          />
+          <Form.Control
+            type="date"
+            name="endDate"
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
+          />
+          <Button onClick={() => fetchAppointmentsByAnimalAndDateRange(searchAnimalId, startDate, endDate)} className="search-button">Search</Button>
+        </div>
+      </div>
+      <Button variant="primary" onClick={handleShow}>Add Appointment</Button>
       {loading ? (
         <p>Loading...</p>
       ) : (
@@ -200,9 +311,9 @@ const Appointment = () => {
                 <td>{appointment.customerName}</td>
                 <td>{appointment.doctorName}</td>
                 <td>
-                  <Button variant="primary" onClick={() => handleEdit(appointment)} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Update</Button>
+                  <Button variant="info" onClick={() => handleEdit(appointment)}>Update</Button>
                   {' '}
-                  <Button variant="primary" onClick={() => handleDelete(appointment.id)} style={{ backgroundColor: '#a4c2a8', borderColor: '#a4c2a8', fontWeight: '500' }}>Delete</Button>
+                  <Button variant="danger" onClick={() => handleDelete(appointment.id)}>Delete</Button>
                 </td>
               </tr>
             ))}

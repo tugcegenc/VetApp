@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Navbar, Nav, Container, NavDropdown } from 'react-bootstrap';
@@ -8,7 +9,7 @@ import '../App.css';
 
 const NavbarComponent = () => {
   return (
-    <Navbar expand="lg" className="custom-navbar">
+    <Navbar expand="lg" bg="custom-navbar">
       <Container>
         <Navbar.Brand as={Link} to="/" style={{ display: 'flex', alignItems: 'center' }}>
           <Logo />
