@@ -35,7 +35,13 @@ const Report = () => {
     try {
       const response = await axios.get('https://vet-app-jb21.onrender.com/api/v1/appointments');
       console.log('Appointments API Response:', response.data);
-      const appointmentsData = response.data.content;
+      const appointmentsData = response.data.content.map(appointment => ({
+        ...appointment,
+        date: appointment.appointmentDate ? new Date(appointment.appointmentDate).toLocaleDateString() : '',
+        doctorName: appointment.doctor ? appointment.doctor.name : 'N/A',
+        animalName: appointment.animal ? appointment.animal.name : 'N/A',
+        customerName: appointment.animal && appointment.animal.customer ? appointment.animal.customer.name : 'N/A'
+      }));
       setAppointments(Array.isArray(appointmentsData) ? appointmentsData : []);
     } catch (error) {
       console.error('There was an error fetching the appointments!', error);
@@ -130,17 +136,16 @@ const Report = () => {
           <tbody>
             {reports.map(report => {
               const appointment = appointments.find(app => app.id === report.appointmentId);
-              console.log('Appointment:', appointment); 
               return (
                 <tr key={report.id}>
                   <td>{report.id}</td>
                   <td>{report.title}</td>
                   <td>{report.diagnosis}</td>
                   <td>{report.price}</td>
-                  <td>{appointment ? new Date(appointment.appointmentDate).toLocaleDateString() : 'N/A'}</td>
-                  <td>{appointment && appointment.doctor ? appointment.doctor.name : 'N/A'}</td>
-                  <td>{appointment && appointment.animal ? appointment.animal.name : 'N/A'}</td>
-                  <td>{appointment && appointment.animal && appointment.animal.customer ? appointment.animal.customer.name : 'N/A'}</td>
+                  <td>{appointment ? appointment.date : 'N/A'}</td>
+                  <td>{appointment ? appointment.doctorName : 'N/A'}</td>
+                  <td>{appointment ? appointment.animalName : 'N/A'}</td>
+                  <td>{appointment ? appointment.customerName : 'N/A'}</td>
                   <td>
                     <Button variant="info" onClick={() => handleEdit(report)}>Update</Button>
                     {' '}
@@ -199,7 +204,7 @@ const Report = () => {
               >
                 <option value="">Select Appointment</option>
                 {appointments.map(appointment => (
-                  <option key={appointment.id} value={appointment.id}>{new Date(appointment.appointmentDate).toLocaleDateString()}</option>
+                  <option key={appointment.id} value={appointment.id}>{appointment.date}</option>
                 ))}
               </Form.Control>
             </Form.Group>
